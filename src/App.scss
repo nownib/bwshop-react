@@ -1,0 +1,30 @@
+@font-face {
+  font-family: "Quicksand";
+  src: url("./assets/fonts/Quicksand-VariableFont_wght.ttf") format("truetype"),
+    url("./assets/fonts/Quicksand-Bold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Quicksand-bold";
+  src: url("./assets/fonts/Quicksand-VariableFont_wght.ttf") format("truetype"),
+    url("./assets/fonts/Quicksand-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Quicksand-bold";
+  src: url("./assets/fonts/Lato/Lato-Thin.ttf") format("truetype"),
+    url("./assets/fonts/Lato/Lato-Thin.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}

@@ -1,0 +1,70 @@
+.register-container {
+  font-family: "Quicksand", sans-serif;
+  padding: 200px 15px;
+
+  .content-left {
+    .heading-form {
+      h1 {
+        font-weight: 700;
+        line-height: 1.2;
+        color: #253d4e;
+        font-size: 42px;
+        font-family: "Quicksand-bold", sans-serif;
+      }
+      p {
+        color: #7e7e7e;
+        font-size: 18px;
+      }
+      .btn-login {
+        font-weight: 700;
+        font-size: 18px;
+        color: #3bb77e;
+        border: none;
+        background-color: #fff;
+        &:hover {
+          color: #fdc040;
+        }
+      }
+    }
+    .body-register {
+      .form-group {
+        .form-control {
+          background: #fff;
+          height: 64px;
+          box-shadow: none;
+          font-size: 16px;
+          width: 100%;
+          margin-bottom: 20px;
+          border-radius: 8px;
+        }
+        .form-control:focus {
+          color: #212529;
+          background-color: #fff;
+          border-color: #3bb77e;
+          outline: 0;
+        }
+      }
+      .btn-register {
+        width: 100%;
+        padding: 20px 40px;
+        background-color: #29a56c;
+        color: #fff;
+        font-weight: 700;
+        border-radius: 10px;
+        transition: transform 0.6s;
+        font-family: "Quicksand-bold", sans-serif;
+
+        &:hover {
+          transform: translateY(-4px);
+        }
+      }
+    }
+  }
+  .content-right {
+    text-align: end;
+    margin-top: 200px;
+    h2 {
+      font-family: "Roboto", sans-serif;
+    }
+  }
+}
