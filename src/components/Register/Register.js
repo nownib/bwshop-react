@@ -1,12 +1,12 @@
 import "./Register.scss";
 import { useNavigate } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { registerUser } from "../../services/userService";
-import { UserContext } from "../../context/UserContext";
+import { useSelector } from "react-redux";
 
 const Register = (props) => {
-  const { user } = useContext(UserContext);
+  const user = useSelector((state) => state.user);
   let navigate = useNavigate();
   const handleToLoginPage = () => {
     navigate("/login");
@@ -85,7 +85,7 @@ const Register = (props) => {
     if (user && user.isAuthenticated) {
       navigate("/");
     }
-  }, []);
+  }, [user]);
   return (
     <>
       <div className="register-container">

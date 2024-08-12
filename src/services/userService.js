@@ -1,4 +1,3 @@
-import { parsePath } from "react-router-dom";
 import axios from "../setup/axios";
 
 const registerUser = (username, phone, email, password) => {

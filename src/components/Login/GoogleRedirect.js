@@ -1,11 +1,13 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { UserContext } from "../../context/UserContext";
+import { login } from "../../redux/action/actions";
+import { useSelector, useDispatch } from "react-redux";
 
 const GoogleRedirect = () => {
   const navigate = useNavigate();
-  const { loginContext } = useContext(UserContext);
+  const dispatch = useDispatch();
+
   const handleLoginWithGoogle = async (token, email, username) => {
     if (token && email && username) {
       let data = {
@@ -14,8 +16,7 @@ const GoogleRedirect = () => {
         account: { username, email },
       };
       localStorage.setItem("Bearer", token);
-      loginContext(data);
-      toast.success("Login successful!");
+      dispatch(login(data));
       navigate("/");
     }
   };
@@ -25,7 +26,7 @@ const GoogleRedirect = () => {
     const email = urlParams.get("email");
     const username = urlParams.get("username");
     handleLoginWithGoogle(token, email, username);
-  }, [navigate, loginContext]);
+  }, [navigate, login]);
 
   return <></>;
 };

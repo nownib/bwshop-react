@@ -1,22 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./NavHeader.scss";
 import Nav from "react-bootstrap/Nav";
 import { NavLink, useNavigate } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Logo from "../../logo.png";
-import { UserContext } from "../../context/UserContext";
 import { logoutUser } from "../../services/userService";
 import { toast } from "react-toastify";
+import { fetchUserRedux, logout } from "../../redux/action/actions";
+import { useSelector, useDispatch } from "react-redux";
+import { Audio } from "react-loader-spinner";
 
 const NavHeader = (props) => {
-  const { user, logoutContext } = useContext(UserContext);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const isLoading = useSelector((state) => state.user.isLoading);
+  const listProductsInCart = useSelector(
+    (state) => state.cart.listProductsInCart
+  );
+
   let navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
 
   const showDropdown = () => {
     setShow(true);
@@ -29,7 +37,7 @@ const NavHeader = (props) => {
   const handleLogout = async () => {
     let data = await logoutUser(); //clear cookie
     localStorage.removeItem("Bearer"); //clear localstorage
-    logoutContext(); //clear user
+    dispatch(logout());
     if (data && data.EC === 0) {
       toast.success("Logout succeeds!");
       navigate("/login");
@@ -67,7 +75,9 @@ const NavHeader = (props) => {
                   className="fa fa-shopping-cart group-icon"
                   aria-hidden="true"
                 >
-                  <span className="notification-badge">4</span>
+                  <span className="notification-badge">
+                    {listProductsInCart.length}
+                  </span>
                 </i>
               </NavLink>
             </Nav>
@@ -105,50 +115,81 @@ const NavHeader = (props) => {
               </Form>
             </Nav>
             <Nav className="d-lg-none">
-              {user && user.isAuthenticated === true ? (
+              {isAuthenticated === true ? (
                 <>
-                  <NavDropdown
-                    title={
-                      <span>
-                        <i
-                          className="fa fa-user-o group-icon"
-                          aria-hidden="true"
-                        ></i>
-                        {user.account.username}
-                      </span>
-                    }
-                    show={show}
-                    onMouseEnter={showDropdown}
-                    onMouseLeave={hideDropdown}
-                  >
-                    <NavDropdown.Item>
-                      <div className="menu-item">
-                        <i className="fa fa-user-o" aria-hidden="true"></i>
-                        My Account
+                  {isLoading === false ? (
+                    <>
+                      <NavDropdown
+                        title={
+                          <span>
+                            <i
+                              className="fa fa-user-o group-icon"
+                              aria-hidden="true"
+                            ></i>
+                            {user && isLoading === false
+                              ? user.account.username
+                              : ""}
+                          </span>
+                        }
+                        show={show}
+                        onMouseEnter={showDropdown}
+                        onMouseLeave={hideDropdown}
+                      >
+                        <NavDropdown.Item>
+                          <div className="menu-item">
+                            <i className="fa fa-user-o" aria-hidden="true"></i>
+                            My Account
+                          </div>
+                        </NavDropdown.Item>
+                        <NavDropdown.Item>
+                          <div className="menu-item">
+                            <i
+                              className="fa fa-shopping-bag"
+                              aria-hidden="true"
+                            ></i>
+                            Order Tracking
+                          </div>
+                        </NavDropdown.Item>
+                        <NavDropdown.Item>
+                          <div className="menu-item">
+                            <i
+                              className="fa fa-map-marker"
+                              aria-hidden="true"
+                            ></i>
+                            Address
+                          </div>
+                        </NavDropdown.Item>
+                        <NavDropdown.Item>
+                          <div
+                            className="menu-item"
+                            onClick={() => handleLogout()}
+                          >
+                            <i
+                              className="fa fa-sign-out"
+                              aria-hidden="true"
+                            ></i>
+                            Sign out
+                          </div>
+                        </NavDropdown.Item>
+                      </NavDropdown>
+                    </>
+                  ) : (
+                    <>
+                      {" "}
+                      <div className="loading-container">
+                        <Audio
+                          height="80"
+                          width="80"
+                          radius="9"
+                          color="green"
+                          ariaLabel="loading"
+                          wrapperStyle
+                          wrapperClass
+                        />
+                        <div>LOADING DATA ...</div>
                       </div>
-                    </NavDropdown.Item>
-                    <NavDropdown.Item>
-                      <div className="menu-item">
-                        <i
-                          className="fa fa-shopping-bag"
-                          aria-hidden="true"
-                        ></i>
-                        Order Tracking
-                      </div>
-                    </NavDropdown.Item>
-                    <NavDropdown.Item>
-                      <div className="menu-item">
-                        <i className="fa fa-map-marker" aria-hidden="true"></i>
-                        Address
-                      </div>
-                    </NavDropdown.Item>
-                    <NavDropdown.Item>
-                      <div className="menu-item" onClick={() => handleLogout()}>
-                        <i className="fa fa-sign-out" aria-hidden="true"></i>
-                        Sign out
-                      </div>
-                    </NavDropdown.Item>
-                  </NavDropdown>
+                    </>
+                  )}
                 </>
               ) : (
                 <NavLink to="/login" className="nav-link">
@@ -167,51 +208,84 @@ const NavHeader = (props) => {
             </NavLink>
             <NavLink to="/cart" className="nav-link">
               <i className="fa fa-shopping-cart group-icon" aria-hidden="true">
-                <span className="notification-badge">4</span>
+                <span className="notification-badge">
+                  {listProductsInCart.length}
+                </span>
               </i>
               <span>Cart</span>
             </NavLink>
-            {user && user.isAuthenticated === true ? (
+            {isAuthenticated === true ? (
               <>
-                <NavDropdown
-                  title={
-                    <span>
-                      <i
-                        className="fa fa-user-o group-icon"
-                        aria-hidden="true"
-                      ></i>
-                      {user.account.username}
-                    </span>
-                  }
-                  show={show}
-                  onMouseEnter={showDropdown}
-                  onMouseLeave={hideDropdown}
-                >
-                  <NavDropdown.Item>
-                    <div className="menu-item">
-                      <i className="fa fa-user-o" aria-hidden="true"></i>
-                      My Account
+                {isLoading === false ? (
+                  <>
+                    <NavDropdown
+                      title={
+                        <span>
+                          <i
+                            className="fa fa-user-o group-icon"
+                            aria-hidden="true"
+                          ></i>
+                          {user && isLoading === false
+                            ? user.account.username
+                            : ""}
+                        </span>
+                      }
+                      show={show}
+                      onMouseEnter={showDropdown}
+                      onMouseLeave={hideDropdown}
+                    >
+                      <NavDropdown.Item>
+                        <div className="menu-item">
+                          <i className="fa fa-user-o" aria-hidden="true"></i>
+                          My Account
+                        </div>
+                      </NavDropdown.Item>
+                      <NavDropdown.Item>
+                        <div className="menu-item">
+                          <i
+                            className="fa fa-shopping-bag"
+                            aria-hidden="true"
+                          ></i>
+                          Order Tracking
+                        </div>
+                      </NavDropdown.Item>
+                      <NavDropdown.Item>
+                        <div className="menu-item">
+                          <i
+                            className="fa fa-map-marker"
+                            aria-hidden="true"
+                          ></i>
+                          Address
+                        </div>
+                      </NavDropdown.Item>
+                      <NavDropdown.Item>
+                        <div
+                          className="menu-item"
+                          onClick={() => handleLogout()}
+                        >
+                          <i className="fa fa-sign-out" aria-hidden="true"></i>
+                          Sign out
+                        </div>
+                      </NavDropdown.Item>
+                    </NavDropdown>
+                  </>
+                ) : (
+                  <>
+                    {" "}
+                    <div className="loading-container">
+                      <Audio
+                        height="80"
+                        width="80"
+                        radius="9"
+                        color="green"
+                        ariaLabel="loading"
+                        wrapperStyle
+                        wrapperClass
+                      />
+                      <div>LOADING DATA ...</div>
                     </div>
-                  </NavDropdown.Item>
-                  <NavDropdown.Item>
-                    <div className="menu-item">
-                      <i className="fa fa-shopping-bag" aria-hidden="true"></i>
-                      Order Tracking
-                    </div>
-                  </NavDropdown.Item>
-                  <NavDropdown.Item>
-                    <div className="menu-item">
-                      <i className="fa fa-map-marker" aria-hidden="true"></i>
-                      Address
-                    </div>
-                  </NavDropdown.Item>
-                  <NavDropdown.Item>
-                    <div className="menu-item" onClick={() => handleLogout()}>
-                      <i className="fa fa-sign-out" aria-hidden="true"></i>
-                      Sign out
-                    </div>
-                  </NavDropdown.Item>
-                </NavDropdown>
+                  </>
+                )}
               </>
             ) : (
               <NavLink to="/login" className="nav-link">

@@ -1,15 +1,16 @@
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useState } from "react";
 import login1 from "../../assets/images/login-1.png";
 import logoGoogle from "../../assets/images/logo-google.png";
 import "./Login.scss";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { loginUser, loginWithGoogle } from "../../services/userService";
-import { UserContext } from "../../context/UserContext";
+import { loginUser } from "../../services/userService";
+import { useSelector, useDispatch } from "react-redux";
+import { login } from "../../redux/action/actions";
 
 const Login = (props) => {
-  const { user, loginContext } = useContext(UserContext);
-
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
   let navigate = useNavigate();
   const handleToRegisterPage = () => {
     navigate("/register");
@@ -17,7 +18,7 @@ const Login = (props) => {
 
   const handleLoginWithGoogle = async () => {
     // Chuyển hướng đến backend route để bắt đầu quá trình xác thực
-    window.location.href = "http://localhost:8888/api/auth/google";
+    window.location.href = `${process.env.REACT_APP_BACKEND_URL}/api/auth/google`;
   };
 
   const [valueLogin, setValueLogin] = useState("");
@@ -52,15 +53,16 @@ const Login = (props) => {
         let username = response.DT.username;
         let email = response.DT.email;
         let token = response.DT.token;
+        let id = response.DT.id;
+
         let data = {
           isAuthenticated: true,
           token,
-          account: { username, email },
+          account: { username, email, id },
         };
+        window.location.href = process.env.REACT_APP_FRONTEND_URL;
         localStorage.setItem("Bearer", token);
-        loginContext(data);
-        toast.success(response.EM);
-        navigate("/");
+        dispatch(login(data));
       }
       if (response && response.EC !== 0) {
         toast.error(response.EM);
@@ -76,7 +78,7 @@ const Login = (props) => {
     if (user && user.isAuthenticated) {
       navigate("/");
     }
-  }, []);
+  }, [user]);
   return (
     <div className="login-container">
       <div className="container">
@@ -84,7 +86,7 @@ const Login = (props) => {
           <div className="col-xl-8 col-lg-10 col-md-12 m-auto">
             <div className="row">
               <div className="content-left col-lg-6 pr-30 d-none d-lg-block">
-                <img src={login1} alt="" />
+                <img src={login1} alt="true" />
               </div>
               <div className="content-right col-lg-6 col-md-8 m-auto">
                 <div className="heading-form mb-4">
