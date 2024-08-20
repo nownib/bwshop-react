@@ -4,6 +4,13 @@ const addToCart = (productId, quantity) => {
   return axios.post("/api/cart/add-product-to-cart", { productId, quantity });
 };
 
+const updateToCart = (productId, quantity) => {
+  return axios.post("/api/cart/update-cart", {
+    productId,
+    quantity,
+  });
+};
+
 const fetchAllItemsInCart = () => {
   return axios.get("/api/cart/read");
 };
@@ -12,4 +19,19 @@ const deleteProductInCart = (id) => {
   return axios.post("/api/cart/delete", { id });
 };
 
-export { addToCart, fetchAllItemsInCart, deleteProductInCart };
+const clearCart = () => {
+  return axios.post("/api/cart/clear");
+};
+
+const addOrder = (data) => {
+  return axios.post("/api/order/create", { data });
+};
+
+export {
+  addToCart,
+  fetchAllItemsInCart,
+  deleteProductInCart,
+  updateToCart,
+  clearCart,
+  addOrder,
+};

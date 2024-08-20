@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./NavHeader.scss";
 import Nav from "react-bootstrap/Nav";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -10,9 +10,10 @@ import Button from "react-bootstrap/Button";
 import Logo from "../../logo.png";
 import { logoutUser } from "../../services/userService";
 import { toast } from "react-toastify";
-import { fetchUserRedux, logout } from "../../redux/action/actions";
+import { logoutRedux } from "../../redux/action/actions";
 import { useSelector, useDispatch } from "react-redux";
 import { Audio } from "react-loader-spinner";
+// import { fetchUserRedux } from "../../redux/action/actions";
 
 const NavHeader = (props) => {
   const dispatch = useDispatch();
@@ -37,9 +38,10 @@ const NavHeader = (props) => {
   const handleLogout = async () => {
     let data = await logoutUser(); //clear cookie
     localStorage.removeItem("Bearer"); //clear localstorage
-    dispatch(logout());
+    dispatch(logoutRedux());
+    sessionStorage.clear();
     if (data && data.EC === 0) {
-      toast.success("Logout succeeds!");
+      toast.success("Logout successfully!");
       navigate("/login");
     } else {
       toast.error(data.EM);
@@ -209,7 +211,9 @@ const NavHeader = (props) => {
             <NavLink to="/cart" className="nav-link">
               <i className="fa fa-shopping-cart group-icon" aria-hidden="true">
                 <span className="notification-badge">
-                  {listProductsInCart.length}
+                  {listProductsInCart.length > 0
+                    ? listProductsInCart.length
+                    : 0}
                 </span>
               </i>
               <span>Cart</span>
@@ -270,21 +274,7 @@ const NavHeader = (props) => {
                     </NavDropdown>
                   </>
                 ) : (
-                  <>
-                    {" "}
-                    <div className="loading-container">
-                      <Audio
-                        height="80"
-                        width="80"
-                        radius="9"
-                        color="green"
-                        ariaLabel="loading"
-                        wrapperStyle
-                        wrapperClass
-                      />
-                      <div>LOADING DATA ...</div>
-                    </div>
-                  </>
+                  <></>
                 )}
               </>
             ) : (

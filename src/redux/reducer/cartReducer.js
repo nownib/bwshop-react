@@ -5,7 +5,10 @@ import {
   FETCH_ITEM_CART_REQUEST,
   FETCH_ITEM_CART_SUCCESS,
   FETCH_ITEM_CART_ERROR,
-  DELETE_PRODUCT_CART_SUCCESS,
+  UPDATE_PRODUCT_CART_REQUEST,
+  UPDATE_PRODUCT_CART_SUCCESS,
+  UPDATE_PRODUCT_CART_ERROR,
+  DEFAULT_CART,
 } from "../action/types";
 
 const INITIAL_STATE = {
@@ -27,6 +30,18 @@ const cartReducer = (state = INITIAL_STATE, action) => {
         ...state,
         isLoading: false,
       };
+    case UPDATE_PRODUCT_CART_REQUEST:
+      return { ...state, isLoading: true };
+    case UPDATE_PRODUCT_CART_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+      };
+    case UPDATE_PRODUCT_CART_ERROR:
+      return {
+        ...state,
+        isLoading: false,
+      };
 
     case FETCH_ITEM_CART_REQUEST:
       return { ...state, isLoading: true };
@@ -40,6 +55,13 @@ const cartReducer = (state = INITIAL_STATE, action) => {
     case FETCH_ITEM_CART_ERROR:
       return {
         ...state,
+        isLoading: false,
+      };
+
+    case DEFAULT_CART:
+      return {
+        ...state,
+        listProductsInCart: [],
         isLoading: false,
       };
 

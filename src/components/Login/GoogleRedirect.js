@@ -1,22 +1,21 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { login } from "../../redux/action/actions";
-import { useSelector, useDispatch } from "react-redux";
+import { loginRedux } from "../../redux/action/actions";
+import { useDispatch } from "react-redux";
 
 const GoogleRedirect = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleLoginWithGoogle = async (token, email, username) => {
+  const handleLoginWithGoogle = async (token, email, username, id) => {
     if (token && email && username) {
       let data = {
         isAuthenticated: true,
         token,
-        account: { username, email },
+        account: { username, email, id },
       };
       localStorage.setItem("Bearer", token);
-      dispatch(login(data));
+      dispatch(loginRedux(data));
       navigate("/");
     }
   };
@@ -25,8 +24,9 @@ const GoogleRedirect = () => {
     const token = urlParams.get("token");
     const email = urlParams.get("email");
     const username = urlParams.get("username");
-    handleLoginWithGoogle(token, email, username);
-  }, [navigate, login]);
+    const id = urlParams.get("id");
+    handleLoginWithGoogle(token, email, username, id);
+  }, [navigate, loginRedux]);
 
   return <></>;
 };

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./Product.scss";
-import { addProductTocartRedux } from "../../redux/action/actions";
+import { addProductToCartRedux } from "../../redux/action/actions";
 import { toast } from "react-toastify";
 import { Audio } from "react-loader-spinner";
 
@@ -25,7 +25,7 @@ const ProductDetails = () => {
   const handleClickAddToCart = (productId) => {
     if (isAuthenticated === true) {
       if (quantity <= productDetails.stock) {
-        dispatch(addProductTocartRedux(productId, quantity));
+        dispatch(addProductToCartRedux(productId, +quantity));
       } else {
         toast.error("The quantity must not exceed the stock inventory!");
       }

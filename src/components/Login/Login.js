@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { loginUser } from "../../services/userService";
 import { useSelector, useDispatch } from "react-redux";
-import { login } from "../../redux/action/actions";
+import { loginRedux } from "../../redux/action/actions";
 
 const Login = (props) => {
   const dispatch = useDispatch();
@@ -49,20 +49,21 @@ const Login = (props) => {
     let check = checkValidInput();
     if (check === true) {
       let response = await loginUser(valueLogin, password);
+
       if (response && response.EC === 0) {
         let username = response.DT.username;
         let email = response.DT.email;
         let token = response.DT.token;
-        let id = response.DT.id;
 
         let data = {
           isAuthenticated: true,
           token,
-          account: { username, email, id },
+          account: { username, email },
         };
-        window.location.href = process.env.REACT_APP_FRONTEND_URL;
-        localStorage.setItem("Bearer", token);
-        dispatch(login(data));
+        // window.location.href = process.env.REACT_APP_FRONTEND_URL;
+        // localStorage.setItem("Bearer", token);
+        dispatch(loginRedux(data));
+        navigate("/");
       }
       if (response && response.EC !== 0) {
         toast.error(response.EM);

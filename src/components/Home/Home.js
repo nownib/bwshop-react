@@ -5,13 +5,16 @@ import slide3 from "../../assets/images/home-slide3.jpg";
 import { useEffect, useState } from "react";
 import { fetchAllProductTrending } from "../../services/productService";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Audio } from "react-loader-spinner";
+import { fetchProductDetailsRedux } from "../../redux/action/actions";
 
 const Home = (props) => {
+  const dispatch = useDispatch();
   const [productTrending, setProductTrending] = useState([]);
   const isLoading = useSelector((state) => state.product.isLoading);
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     getAllProductTrending();
   }, []);
 
@@ -32,6 +35,12 @@ const Home = (props) => {
     }
     return text;
   };
+  const handleClickProductDetails = (product) => {
+    let productId = product.id;
+    dispatch(fetchProductDetailsRedux(productId));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <div className="home-container">
       <div className="row">
@@ -94,7 +103,10 @@ const Home = (props) => {
                         <div className="product-cart-wrap mb-4">
                           <div className="product-img-wrap">
                             <div className="product-img">
-                              <Link>
+                              <Link
+                                to={`/product/${item.id}`}
+                                onClick={() => handleClickProductDetails(item)}
+                              >
                                 <img src={item.imageUrl} alt />
                               </Link>
                             </div>
@@ -110,8 +122,12 @@ const Home = (props) => {
                           </div>
                           <div className="product-content-wrap">
                             <div className="product-name-cover">
-                              <Link to="/" className="product-name">
-                                {truncateText(item.name, 40)}
+                              <Link
+                                to={`/product/${item.id}`}
+                                className="product-name"
+                                onClick={() => handleClickProductDetails(item)}
+                              >
+                                {truncateText(item.name, 29)}
                               </Link>
                             </div>
                             <div className="product-rate-cover">
@@ -127,7 +143,13 @@ const Home = (props) => {
                                 <span>${item.price}</span>
                               </div>
                               <div className="product-view">
-                                <Link className="link-shop-product">
+                                <Link
+                                  className="link-shop-product"
+                                  to={`/product/${item.id}`}
+                                  onClick={() =>
+                                    handleClickProductDetails(item)
+                                  }
+                                >
                                   <i
                                     className="fa fa-eye"
                                     aria-hidden="true"

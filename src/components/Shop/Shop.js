@@ -5,18 +5,15 @@ import Typography from "@mui/material/Typography";
 import { Audio } from "react-loader-spinner";
 import React, { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { fetchAllCategories } from "../../services/productService";
 import {
-  increaseCounter,
   fetchAllProductsRedux,
   fetchProductDetailsRedux,
 } from "../../redux/action/actions";
 import { useSelector, useDispatch } from "react-redux";
 
 const Shop = () => {
-  const navigate = useNavigate();
-
   const [price, setPrice] = useState([0, 50]);
   const [listCategories, setListCategories] = useState([]);
 
@@ -36,9 +33,7 @@ const Shop = () => {
   const isError = useSelector((state) => {
     return state.product.isError;
   });
-
   const dispatch = useDispatch();
-
   const handleClickProductDetails = (product) => {
     let productId = product.id;
     dispatch(fetchProductDetailsRedux(productId));
@@ -46,6 +41,7 @@ const Shop = () => {
   };
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     dispatch(fetchAllProductsRedux());
   }, []);
 
@@ -270,88 +266,100 @@ const Shop = () => {
                       </>
                     ) : (
                       <>
-                        {productsFilter &&
-                          productsFilter.length &&
-                          productsFilter.map((item, index) => {
-                            return (
-                              <div
-                                key={index}
-                                className="col-lg-1-5 col-md-4 col-sm-6 col-12"
-                              >
-                                <div className="product-cart-wrap mb-4">
-                                  <div className="product-img-wrap">
-                                    <div className="product-img">
-                                      <Link
-                                        to={`/product/${item.id}`}
-                                        onClick={() =>
-                                          handleClickProductDetails(item)
-                                        }
-                                      >
-                                        <img src={item.imageUrl} alt />
-                                      </Link>
-                                    </div>
-                                    {item.status ? (
-                                      <div
-                                        className={`product-status ${
-                                          item.status === "Trending"
-                                            ? "pink"
-                                            : "blue"
-                                        }`}
-                                      >
-                                        {item.status}
-                                      </div>
-                                    ) : (
-                                      <div></div>
-                                    )}
-
-                                    <div className="product-action">
-                                      <span
-                                        aria-label="Add To Wishlist"
-                                        className="favorite-btn"
-                                      >
-                                        <i className="fa fa-heart-o"></i>
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div className="product-content-wrap">
-                                    <div className="product-name-cover">
-                                      <Link to="/" className="product-name">
-                                        {truncateText(item.name, 32)}
-                                      </Link>
-                                    </div>
-                                    <div className="product-rate-cover">
-                                      <div className="product-rate">
-                                        <div className="product-rating"></div>
-                                      </div>
-                                    </div>
-                                    <div className="product-category">
-                                      <span>{item.Category.name}</span>
-                                    </div>
-                                    <div className="product-cart-bottom">
-                                      <div className="product-price">
-                                        <span>${item.price}</span>
-                                      </div>
-                                      <div className="product-view">
+                        {productsFilter && productsFilter.length > 0 ? (
+                          <>
+                            {productsFilter.map((item, index) => {
+                              return (
+                                <div
+                                  key={index}
+                                  className="col-lg-1-5 col-md-4 col-sm-6 col-12"
+                                >
+                                  <div className="product-cart-wrap mb-4">
+                                    <div className="product-img-wrap">
+                                      <div className="product-img">
                                         <Link
-                                          className="link-shop-product"
                                           to={`/product/${item.id}`}
                                           onClick={() =>
                                             handleClickProductDetails(item)
                                           }
                                         >
-                                          <i
-                                            className="fa fa-eye"
-                                            aria-hidden="true"
-                                          ></i>
-                                          Views
+                                          <img src={item.imageUrl} alt />
                                         </Link>
+                                      </div>
+                                      {item.status ? (
+                                        <div
+                                          className={`product-status ${
+                                            item.status === "Trending"
+                                              ? "pink"
+                                              : "blue"
+                                          }`}
+                                        >
+                                          {item.status}
+                                        </div>
+                                      ) : (
+                                        <div></div>
+                                      )}
+
+                                      <div className="product-action">
+                                        <span
+                                          aria-label="Add To Wishlist"
+                                          className="favorite-btn"
+                                        >
+                                          <i className="fa fa-heart-o"></i>
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="product-content-wrap">
+                                      <div className="product-name-cover">
+                                        <Link
+                                          to={`/product/${item.id}`}
+                                          className="product-name"
+                                          onClick={() =>
+                                            handleClickProductDetails(item)
+                                          }
+                                        >
+                                          {truncateText(item.name, 29)}
+                                        </Link>
+                                      </div>
+                                      <div className="product-rate-cover">
+                                        <div className="product-rate">
+                                          <div className="product-rating"></div>
+                                        </div>
+                                      </div>
+                                      <div className="product-category">
+                                        <span>{item.Category.name}</span>
+                                      </div>
+                                      <div className="product-cart-bottom">
+                                        <div className="product-price">
+                                          <span>${item.price}</span>
+                                        </div>
+                                        <div className="product-view">
+                                          <Link
+                                            className="link-shop-product"
+                                            to={`/product/${item.id}`}
+                                            onClick={() =>
+                                              handleClickProductDetails(item)
+                                            }
+                                          >
+                                            <i
+                                              className="fa fa-eye"
+                                              aria-hidden="true"
+                                            ></i>
+                                            Views
+                                          </Link>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            );
-                          })}
+                              );
+                            })}
+                          </>
+                        ) : (
+                          <>
+                            <div></div>
+                          </>
+                        )}
                       </>
                     )}
                   </>

@@ -4,11 +4,12 @@ import rootReducer from "../reducer/rootReducer";
 import { thunk } from "redux-thunk";
 import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
+import sessionStorage from "redux-persist/lib/storage/session";
 
 const persistConfig = {
   key: "root",
-  storage,
-  whitelist: ["productDetails", "product"],
+  storage: sessionStorage,
+  whitelist: ["productDetails", "product", "user"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

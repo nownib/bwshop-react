@@ -1,8 +1,7 @@
-// reducers/userReducer.js
-
 import {
   FETCH_USER_REQUEST,
   FETCH_USER_SUCCESS,
+  FETCH_USER_ERORR,
   LOGIN,
   LOGOUT,
 } from "../action/types";
@@ -27,20 +26,21 @@ const userReducer = (state = INITIAL_STATE, action) => {
         account: {
           email: action.userData.email,
           username: action.userData.username,
-          id: action.userData.id,
         },
       };
+    case FETCH_USER_ERORR:
+      return { ...state, isLoading: false };
+
     case LOGIN:
       return {
         ...state,
         isAuthenticated: true,
         isLoading: false,
-        token: action.userData.token,
         account: {
           email: action.userData.email,
           username: action.userData.username,
-          id: action.userData.id,
         },
+        token: action.userData.token,
       };
     case LOGOUT:
       return {
