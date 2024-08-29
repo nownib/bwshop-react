@@ -14,6 +14,7 @@ const fetchAllProducts = () => {
 const fetchProductDetails = (productId) => {
   return axios.post(`/api/product/read-details`, { productId });
 };
+
 export {
   fetchAllProductTrending,
   fetchAllCategories,

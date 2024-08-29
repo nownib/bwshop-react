@@ -10,8 +10,10 @@ import { fetchAllCategories } from "../../services/productService";
 import {
   fetchAllProductsRedux,
   fetchProductDetailsRedux,
+  addProductToWishlistRedux,
 } from "../../redux/action/actions";
 import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 const Shop = () => {
   const [price, setPrice] = useState([0, 50]);
@@ -30,6 +32,10 @@ const Shop = () => {
   const isLoading = useSelector((state) => {
     return state.product.isLoading;
   });
+  const isAuthenticated = useSelector((state) => {
+    return state.user.isAuthenticated;
+  });
+
   const isError = useSelector((state) => {
     return state.product.isError;
   });
@@ -38,6 +44,14 @@ const Shop = () => {
     let productId = product.id;
     dispatch(fetchProductDetailsRedux(productId));
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleClickAddToWishlist = (productId) => {
+    if (isAuthenticated === true) {
+      dispatch(addProductToWishlistRedux(productId));
+    } else {
+      toast.error("You need to login to add products to the wishlist!");
+    }
   };
 
   useEffect(() => {
@@ -304,6 +318,9 @@ const Shop = () => {
                                         <span
                                           aria-label="Add To Wishlist"
                                           className="favorite-btn"
+                                          onClick={() =>
+                                            handleClickAddToWishlist(item.id)
+                                          }
                                         >
                                           <i className="fa fa-heart-o"></i>
                                         </span>

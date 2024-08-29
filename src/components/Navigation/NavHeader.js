@@ -7,7 +7,7 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Logo from "../../logo.png";
+import Logo from "../../assets/images/logo.png";
 import { logoutUser } from "../../services/userService";
 import { toast } from "react-toastify";
 import { logoutRedux } from "../../redux/action/actions";
@@ -23,7 +23,9 @@ const NavHeader = (props) => {
   const listProductsInCart = useSelector(
     (state) => state.cart.listProductsInCart
   );
-
+  const listProductsInWishlist = useSelector(
+    (state) => state.wishlist.listProductsInWishlist
+  );
   let navigate = useNavigate();
   const [show, setShow] = useState(false);
 
@@ -60,14 +62,18 @@ const NavHeader = (props) => {
         <Navbar expand="lg" className="bg-body-tertiary" fixed="top">
           <Navbar.Brand href="/">
             <div className="logo-container">
-              <img src={Logo} alt="logo" width="150" height="75" />
+              <img src={Logo} alt="logo" width="175" height="75" />
             </div>
           </Navbar.Brand>
           <div className="right-container">
             <Nav className="d-lg-none m-0 p-0">
               <NavLink to="/wishlist" className="p-0 me-2">
                 <i className="fa fa-heart-o group-icon" aria-hidden="true">
-                  <span className="notification-badge">1</span>
+                  <span className="notification-badge">
+                    {listProductsInWishlist.length > 0
+                      ? listProductsInWishlist.length
+                      : 0}
+                  </span>
                 </i>
               </NavLink>
             </Nav>
@@ -87,7 +93,7 @@ const NavHeader = (props) => {
           </div>
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <NavLink to="/" exact className="nav-link">
+              <NavLink to="/" className="nav-link" end>
                 Home
               </NavLink>
               <NavLink to="/about" className="nav-link">
@@ -96,7 +102,7 @@ const NavHeader = (props) => {
               <NavLink to="/shop" className="nav-link ">
                 Shop
               </NavLink>
-              <NavLink to="/blog" className="nav-link">
+              <NavLink to="/blog" className="nav-link" end>
                 Blog
               </NavLink>
               <NavLink to="/contact" className="nav-link">
@@ -204,7 +210,11 @@ const NavHeader = (props) => {
           <Nav className="mx-auto d-none d-lg-flex">
             <NavLink to="/wishlist" className="nav-link">
               <i className="fa fa-heart-o group-icon" aria-hidden="true">
-                <span className="notification-badge">1</span>
+                <span className="notification-badge">
+                  {listProductsInWishlist.length > 0
+                    ? listProductsInWishlist.length
+                    : 0}
+                </span>
               </i>
               <span>Wishlist</span>
             </NavLink>

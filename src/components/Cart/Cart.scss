@@ -23,13 +23,89 @@
 .cart-container {
   @media only screen and (min-width: 1200px) {
     .container {
-      max-width: 1610px;
+      max-width: 1410px;
     }
+  }
+  @media only screen and (max-width: 768px) {
+    .cart-total-body {
+      margin: 0 20px !important;
+    }
+    .p-40 {
+      padding: 0 20px 30px 20px !important;
+    }
+  }
+  .table-product {
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+      @media (max-width: 768px) {
+        display: block !important ;
+        width: 100%;
+      }
+    }
+
+    tr {
+      @media (max-width: 768px) {
+        margin-bottom: 40px !important;
+      }
+    }
+
+    th {
+      @media (max-width: 768px) {
+        display: none !important;
+      }
+    }
+
+    td {
+      @media (max-width: 768px) {
+        text-align: center !important;
+        position: relative;
+        display: block;
+        border-bottom: 1px solid #ddd;
+        padding: 5px !important;
+        max-width: 100% !important;
+        height: auto;
+        &::before {
+          content: attr(data-title) " " !important;
+          position: absolute;
+          left: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          text-transform: capitalize;
+          font-weight: 700;
+          font-size: 16px;
+          color: #253d4e;
+        }
+      }
+    }
+
+    .item-img {
+      @media (max-width: 768px) {
+        padding: 0 0 25px 0 !important;
+      }
+    }
+    .item-name {
+      @media (max-width: 768px) {
+        // padding: 0 !important;
+      }
+
+      .item-name-link {
+        @media (max-width: 768px) {
+          display: block;
+          width: 100%;
+        }
+      }
+    }
+  }
+  .mt-50 {
+    margin-top: 50px;
   }
   .cart-total-header {
     .p-40 {
-      padding: 0 30px 40px;
-
+      padding: 0 20px 40px 30px;
       .mb-10 {
         font-family: "Quicksand-bold", sans-serif;
         color: #253d4e;
@@ -68,7 +144,7 @@
     }
   }
   .cart-total-body {
-    margin: 0 30px !important;
+    margin: 0 20px 0 30px;
     padding: 30px 25px;
     border-radius: 15px;
     box-shadow: 5px 5px 15px #0000000d;
@@ -250,8 +326,7 @@
           }
           .item-quantity {
           }
-          .item-img {
-          }
+
           .item-price {
             color: #7e7e7e;
             font-size: 24px;

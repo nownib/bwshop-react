@@ -7,12 +7,19 @@ import { fetchAllProductTrending } from "../../services/productService";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Audio } from "react-loader-spinner";
-import { fetchProductDetailsRedux } from "../../redux/action/actions";
+import {
+  fetchProductDetailsRedux,
+  addProductToWishlistRedux,
+} from "../../redux/action/actions";
+import { toast } from "react-toastify";
 
 const Home = (props) => {
   const dispatch = useDispatch();
   const [productTrending, setProductTrending] = useState([]);
   const isLoading = useSelector((state) => state.product.isLoading);
+  const isAuthenticated = useSelector((state) => {
+    return state.user.isAuthenticated;
+  });
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     getAllProductTrending();
@@ -41,6 +48,13 @@ const Home = (props) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleClickAddToWishlist = (productId) => {
+    if (isAuthenticated === true) {
+      dispatch(addProductToWishlistRedux(productId));
+    } else {
+      toast.error("You need to login to add products to the wishlist!");
+    }
+  };
   return (
     <div className="home-container">
       <div className="row">
@@ -115,6 +129,9 @@ const Home = (props) => {
                               <span
                                 aria-label="Add To Wishlist"
                                 className="favorite-btn"
+                                onClick={() =>
+                                  handleClickAddToWishlist(item.id)
+                                }
                               >
                                 <i className="fa fa-heart-o"></i>
                               </span>

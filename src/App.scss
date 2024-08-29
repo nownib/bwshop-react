@@ -31,15 +31,15 @@
 
 .app-container {
   font-family: "Quicksand", sans-serif;
-  padding: 105px 0px;
+  padding: 105px 0px 0px 0;
   width: 100%;
   height: auto;
 
   @media only screen and (max-width: 1024px) {
-    padding: 105px 0px;
+    padding: 105px 0px 0px 0;
   }
 
   @media only screen and (max-width: 768px) {
-    padding: 115px 0px;
+    padding: 115px 0px 0px 0;
   }
 }

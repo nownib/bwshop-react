@@ -1,0 +1,146 @@
+@media only screen and (min-width: 1200px) {
+  .container {
+    max-width: 1610px;
+  }
+}
+.mb-50 {
+  margin-bottom: 50px;
+}
+.mb-30 {
+  margin-bottom: 30px;
+}
+.mt-50 {
+  margin-top: 50px;
+}
+.mt-30 {
+  margin-top: 30px;
+}
+.pt-50 {
+  padding-top: 50px;
+}
+.pr-30 {
+  padding-right: 30px;
+}
+.text-title {
+  font-family: "Quicksand-bold", sans-serif;
+  color: #253d4e;
+  font-weight: 700;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+}
+.text-muted {
+  color: #b6b6b6;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+}
+.mr-10 {
+  margin-right: 10px;
+}
+.loop-grid {
+  .hover-up {
+    transition: all 0.3s ease-in;
+    &:hover {
+      transform: translateY(-5px);
+    }
+  }
+  .entry-content-2 {
+    padding: 20px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 175px;
+  }
+}
+.post-title {
+  a {
+    font-family: "Quicksand-bold", sans-serif;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    color: #253d4e;
+    transition: all 0.3s ease 0s;
+
+    &:hover {
+      color: #3bb77e;
+    }
+  }
+}
+.post-on {
+  font-size: 13px;
+}
+
+.single-page {
+  .text-1 {
+    color: #3bb77e;
+    font-family: "Quicksand-bold", sans-serif;
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+    transition: all 0.3s ease 0s;
+    &:hover {
+      color: #fdc040;
+    }
+  }
+  .text-2 {
+    font-family: "Quicksand-bold", sans-serif;
+    color: #253d4e;
+    font-weight: 700;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+    font-size: 40px;
+  }
+}
+
+.single-content {
+  ul {
+    list-style: circle;
+    padding-left: 1rem;
+    font-size: 1rem;
+  }
+  li {
+    color: #253d4eb4;
+    font-size: 17px;
+    margin-bottom: 1.2em;
+    font-weight: 600;
+  }
+  img {
+    max-width: 100%;
+    margin-bottom: 10px;
+  }
+  a {
+    font-family: "Quicksand-bold", sans-serif;
+    font-weight: 600;
+    color: darkcyan;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  p {
+    color: #253d4eb4;
+    font-size: 17px;
+    margin-bottom: 1.2em;
+    font-weight: 600;
+  }
+  h2 {
+    font-family: "Quicksand-bold", sans-serif;
+    font-weight: 700;
+    font-size: 48px;
+    margin-bottom: 30px;
+  }
+  h3 {
+    font-family: "Quicksand-bold", sans-serif;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 48px;
+    margin-bottom: 28px;
+  }
+  h5 {
+    font-family: "Quicksand-bold", sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+    margin-bottom: 24px;
+  }
+}

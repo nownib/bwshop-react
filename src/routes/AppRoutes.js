@@ -10,6 +10,10 @@ import About from "../components/About/About";
 import Shop from "../components/Shop/Shop";
 import ProductDetails from "../components/Product/Product";
 import Cart from "../components/Cart/Cart";
+import Wishlist from "../components/Wishlish/Wishlist";
+import Blog from "../components/Blog/Blog";
+import BlogDetails from "../components/Blog/BlogDetails";
+import Contact from "../components/Contact/Contact";
 
 const AppRoutes = () => {
   return (
@@ -24,13 +28,14 @@ const AppRoutes = () => {
         {/* </Route> */}
         <Route path="/about" element={<About />} />
         <Route path="/shop" element={<Shop />} />
-        <Route path="/blog" element={<Login />} />
-        <Route path="/contact" element={<Login />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/contact" element={<Contact />} />
 
         <Route path="/cart" element={<Cart />} />
-
+        <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/product/:productId" element={<ProductDetails />} />
-        <Route exact path="/" element={<Home />} />
+        <Route path="/blog/:blogId" element={<BlogDetails />} />
+        <Route path="/" element={<Home />} />
         <Route path="*" element={<NoPage />} />
       </Routes>
     </>

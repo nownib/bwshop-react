@@ -27,9 +27,23 @@ import {
   ADD_ORDER_REQUEST,
   ADD_ORDER_SUCCESS,
   ADD_ORDER_ERROR,
+  ADD_PRODUCT_TO_WISHLIST_REQUEST,
+  ADD_PRODUCT_TO_WISHLIST_SUCCESS,
+  ADD_PRODUCT_TO_WISHLIST_ERROR,
+  FETCH_ITEM_WISHLIST_REQUEST,
+  FETCH_ITEM_WISHLIST_SUCCESS,
+  FETCH_ITEM_WISHLIST_ERROR,
+  DELETE_PRODUCT_WISHLIST_SUCCESS,
+  FETCH_BLOG_REQUEST,
+  FETCH_BLOG_SUCCESS,
+  FETCH_BLOG_ERROR,
+  FETCH_BLOG_DETAIL_REQUEST,
+  FETCH_BLOG_DETAIL_SUCCESS,
+  FETCH_BLOG_DETAIL_ERROR,
 } from "./types";
 import { fetchAllProducts } from "../../services/productService";
 import { getUserAccount } from "../../services/userService";
+import { fetchAllBlogs } from "../../services/blogService";
 import {
   addToCart,
   fetchAllItemsInCart,
@@ -38,6 +52,11 @@ import {
   clearCart,
   addOrder,
 } from "../../services/cartService";
+import {
+  addProductToWishlist,
+  fetchAllItemsInWishlist,
+  deleteProductInWishlist,
+} from "../../services/wishlistService";
 import { toast } from "react-toastify";
 
 export const fetchAllItemsInCartRedux = () => {
@@ -185,6 +204,7 @@ export const fetchUserRedux = () => {
         const data = response.DT;
         dispatch(fetchUserSuccess(data));
         dispatch(fetchAllItemsInCartRedux());
+        dispatch(fetchAllItemsInWishlistRedux());
       } else {
         dispatch(logoutRedux());
       }
@@ -351,5 +371,158 @@ export const addOrderSuccess = () => {
 export const addOrderError = () => {
   return {
     type: ADD_ORDER_ERROR,
+  };
+};
+
+export const addProductToWishlistRedux = (productId) => {
+  return async (dispatch, getState) => {
+    dispatch(addProductToWishlistRequest());
+    try {
+      let response = await addProductToWishlist(productId);
+      if (response && response.EC === 0) {
+        dispatch(addProductToWishlistSuccess());
+        dispatch(fetchAllItemsInWishlistRedux());
+        toast.success(response.EM);
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(addProductToWishlistError());
+    }
+  };
+};
+
+export const addProductToWishlistRequest = () => {
+  return {
+    type: ADD_PRODUCT_TO_WISHLIST_REQUEST,
+  };
+};
+export const addProductToWishlistSuccess = () => {
+  return {
+    type: ADD_PRODUCT_TO_WISHLIST_SUCCESS,
+  };
+};
+
+export const addProductToWishlistError = () => {
+  return {
+    type: ADD_PRODUCT_TO_WISHLIST_ERROR,
+  };
+};
+
+export const fetchAllItemsInWishlistRedux = () => {
+  return async (dispatch, getState) => {
+    dispatch(fetchAllItemsWishlistRequest());
+    try {
+      const response = await fetchAllItemsInWishlist();
+      if (response && response.EC === 0) {
+        dispatch(fetchAllItemsWishlistSuccess(response.DT));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(fetchAllItemsWishlistError());
+    }
+  };
+};
+
+export const fetchAllItemsWishlistRequest = () => {
+  return {
+    type: FETCH_ITEM_WISHLIST_REQUEST,
+  };
+};
+
+export const fetchAllItemsWishlistSuccess = (data) => {
+  return {
+    type: FETCH_ITEM_WISHLIST_SUCCESS,
+    listItems: data,
+  };
+};
+
+export const fetchAllItemsWishlistError = () => {
+  return {
+    type: FETCH_ITEM_WISHLIST_ERROR,
+  };
+};
+
+export const deleteProductInWishlistRedux = (productId) => {
+  return async (dispatch, getState) => {
+    try {
+      let response = await deleteProductInWishlist(productId);
+      if (response && response.EC === 0) {
+        dispatch(deleteProductSuccess());
+        dispatch(fetchAllItemsInWishlistRedux());
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const deleteProductWishlistSuccess = (data) => {
+  return {
+    type: DELETE_PRODUCT_WISHLIST_SUCCESS,
+  };
+};
+
+export const fetchAllBlogsRedux = () => {
+  return async (dispatch, getState) => {
+    dispatch(fetchBlogsRequest());
+    try {
+      const response = await fetchAllBlogs();
+      if (response && response.EC === 0) {
+        dispatch(fetchBlogsSuccess(response.DT));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(fetchBlogsError());
+    }
+  };
+};
+
+export const fetchBlogsRequest = () => {
+  return {
+    type: FETCH_BLOG_REQUEST,
+  };
+};
+
+export const fetchBlogsSuccess = (data) => {
+  return {
+    type: FETCH_BLOG_SUCCESS,
+    listItems: data,
+  };
+};
+
+export const fetchBlogsError = () => {
+  return {
+    type: FETCH_BLOG_ERROR,
+  };
+};
+
+export const fetchBlogDetailsRedux = (blogId) => {
+  return async (dispatch, getState) => {
+    dispatch(fetchBlogDetailsRequest());
+    try {
+      const id = blogId;
+      dispatch(fetchBlogDetailsSuccess(id));
+    } catch (error) {
+      dispatch(fetchBlogDetailsError());
+    }
+  };
+};
+
+export const fetchBlogDetailsRequest = () => {
+  return {
+    type: FETCH_BLOG_DETAIL_REQUEST,
+  };
+};
+
+export const fetchBlogDetailsSuccess = (id) => {
+  return {
+    type: FETCH_BLOG_DETAIL_SUCCESS,
+    blogId: id,
+  };
+};
+
+export const fetchBlogDetailsError = () => {
+  return {
+    type: FETCH_BLOG_DETAIL_ERROR,
   };
 };

@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./Product.scss";
-import { addProductToCartRedux } from "../../redux/action/actions";
+import {
+  addProductToCartRedux,
+  addProductToWishlistRedux,
+} from "../../redux/action/actions";
 import { toast } from "react-toastify";
 import { Audio } from "react-loader-spinner";
 
@@ -38,7 +41,13 @@ const ProductDetails = () => {
       setQuantity(quantity);
     }
   };
-
+  const handleClickAddToWishlist = (productId) => {
+    if (isAuthenticated === true) {
+      dispatch(addProductToWishlistRedux(productId));
+    } else {
+      toast.error("You need to login to add products to the wishlist!");
+    }
+  };
   return (
     <>
       {isLoading === true ? (
@@ -121,7 +130,9 @@ const ProductDetails = () => {
                             <button
                               type="button"
                               className="btn-add-to-wishlist"
-                              // onClick={() => handleClickProductDetails(item)}
+                              onClick={() =>
+                                handleClickAddToWishlist(productDetails.id)
+                              }
                             >
                               <i className="fa fa-heart-o"></i>
                             </button>

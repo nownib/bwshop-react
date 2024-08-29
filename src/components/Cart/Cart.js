@@ -199,8 +199,16 @@ const Cart = () => {
                                       {item.name}
                                     </Link>
                                   </td>
-                                  <td className="item-price">${item.price}</td>
-                                  <td className="item-quantity">
+                                  <td
+                                    className="item-price"
+                                    data-title="Unit Price"
+                                  >
+                                    ${item.price}
+                                  </td>
+                                  <td
+                                    className="item-quantity"
+                                    data-title="Quantity"
+                                  >
                                     <div className="quantity">
                                       <input
                                         type="number"
@@ -228,7 +236,10 @@ const Cart = () => {
                                       />
                                     </div>
                                   </td>
-                                  <td className="item-total-price">
+                                  <td
+                                    className="item-total-price"
+                                    data-title="Subtotal"
+                                  >
                                     $
                                     {(
                                       item.price *
@@ -237,7 +248,7 @@ const Cart = () => {
                                         : item.Carts.Cart_Items.quantity)
                                     ).toFixed(2)}
                                   </td>
-                                  <td className="item-btn">
+                                  <td className="item-btn" data-title="Remove">
                                     <button
                                       className="btn"
                                       onClick={() =>

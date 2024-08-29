@@ -8,6 +8,7 @@ import { Audio } from "react-loader-spinner";
 import { useEffect } from "react";
 import { fetchUserRedux } from "./redux/action/actions";
 import { useDispatch, useSelector } from "react-redux";
+import Footer from "./components/Footer/Footer";
 
 function App() {
   const dispatch = useDispatch();
@@ -49,6 +50,9 @@ function App() {
             </div>
           </>
         )}
+        <div className="app-footer">
+          <Footer />
+        </div>
       </BrowserRouter>
       <ToastContainer
         position="bottom-center"
