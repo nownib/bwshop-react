@@ -41,7 +41,8 @@
         font-size: 16px;
         padding-right: 20px;
         padding-left: 16px;
-        cursor: pointer;
+        cursor: pointer !important;
+        box-shadow: none;
       }
       .nav-link {
         &.active {

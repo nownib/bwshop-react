@@ -27,4 +27,15 @@ const logoutUser = () => {
 const loginWithGoogle = () => {
   return axios.get("/api/auth/google");
 };
-export { registerUser, loginUser, getUserAccount, logoutUser, loginWithGoogle };
+
+const updateAccount = (userData) => {
+  return axios.put("/api/account/update", { userData });
+};
+export {
+  registerUser,
+  loginUser,
+  getUserAccount,
+  logoutUser,
+  loginWithGoogle,
+  updateAccount,
+};

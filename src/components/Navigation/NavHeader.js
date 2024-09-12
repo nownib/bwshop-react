@@ -1,7 +1,7 @@
 import React from "react";
 import "./NavHeader.scss";
 import Nav from "react-bootstrap/Nav";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, Link } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { useState } from "react";
@@ -56,6 +56,9 @@ const NavHeader = (props) => {
   //   setShowMenu(false);
   // };
 
+  const handleClickAccount = () => {
+    navigate("/account");
+  };
   return (
     <>
       <div className="nav-header">
@@ -129,7 +132,7 @@ const NavHeader = (props) => {
                     <>
                       <NavDropdown
                         title={
-                          <span>
+                          <span onClick={() => handleClickAccount()}>
                             <i
                               className="fa fa-user-o group-icon"
                               aria-hidden="true"
@@ -144,7 +147,10 @@ const NavHeader = (props) => {
                         onMouseLeave={hideDropdown}
                       >
                         <NavDropdown.Item>
-                          <div className="menu-item">
+                          <div
+                            className="menu-item"
+                            onClick={() => handleClickAccount()}
+                          >
                             <i className="fa fa-user-o" aria-hidden="true"></i>
                             My Account
                           </div>
@@ -234,7 +240,7 @@ const NavHeader = (props) => {
                   <>
                     <NavDropdown
                       title={
-                        <span>
+                        <span onClick={() => handleClickAccount()}>
                           <i
                             className="fa fa-user-o group-icon"
                             aria-hidden="true"
@@ -249,7 +255,10 @@ const NavHeader = (props) => {
                       onMouseLeave={hideDropdown}
                     >
                       <NavDropdown.Item>
-                        <div className="menu-item">
+                        <div
+                          className="menu-item"
+                          onClick={() => handleClickAccount()}
+                        >
                           <i className="fa fa-user-o" aria-hidden="true"></i>
                           My Account
                         </div>

@@ -2,6 +2,7 @@ import "./Contact.scss";
 import contact1 from "../../assets/images/contact-1.png";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { sendContact } from "../../services/contactService";
 
 const Contact = () => {
   const [name, setName] = useState("");
@@ -9,13 +10,15 @@ const Contact = () => {
   const [phone, setPhone] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+
   const handleContact = async () => {
-    //     let response = await contact(username, phone, email, password);
-    //     if (response && response.EC === 0) {
-    //       toast.success(response.EM);
-    //     } else {
-    //       toast.error(response.EM);
-    //     }
+    let response = await sendContact(name, phone, email, subject, message);
+    console.log(response);
+    if (response && response.EC === 0) {
+      toast.success(response.EM);
+    } else {
+      toast.error(response.EM);
+    }
   };
   return (
     <main>

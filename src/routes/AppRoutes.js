@@ -14,6 +14,7 @@ import Wishlist from "../components/Wishlish/Wishlist";
 import Blog from "../components/Blog/Blog";
 import BlogDetails from "../components/Blog/BlogDetails";
 import Contact from "../components/Contact/Contact";
+import Account from "../components/Account/Account";
 
 const AppRoutes = () => {
   return (
@@ -35,6 +36,11 @@ const AppRoutes = () => {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/product/:productId" element={<ProductDetails />} />
         <Route path="/blog/:blogId" element={<BlogDetails />} />
+
+        <Route path="/account" element={<Account />} />
+        <Route path="/account/orders" element={<Account />} />
+        <Route path="/account/address" element={<Account />} />
+
         <Route path="/" element={<Home />} />
         <Route path="*" element={<NoPage />} />
       </Routes>

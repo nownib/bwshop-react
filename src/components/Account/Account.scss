@@ -1,0 +1,127 @@
+.btn-save {
+  font-size: 16px;
+  font-weight: 500;
+  padding: 15px 40px;
+  color: #fff;
+  border: none;
+  background-color: #3bb77e;
+  border: 1px solid #29a56c;
+  border-radius: 10px;
+  font-weight: 700;
+  font-family: "Quicksand-bold", sans-serif;
+  color: #fff;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease 0s;
+  &:hover {
+    background-color: #29a56b;
+    color: #fff;
+    box-shadow: 5px 5px 15px #0000000d;
+  }
+}
+.pt-100 {
+  padding-top: 100px;
+}
+.pb-100 {
+  padding-bottom: 100px;
+}
+.mr-10 {
+  margin-right: 10px;
+}
+.pl-50 {
+  padding-left: 50px;
+}
+.selected {
+  color: #fff !important;
+  background-color: #3bb77e;
+  border-radius: 10px;
+}
+.sidebar ul li {
+  position: relative;
+  border: 1px solid #ececec;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  .nav-link {
+    font-size: 16px;
+    color: #7e7e7e;
+    padding: 15px 30px;
+    font-family: "Quicksand-bold", sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+  }
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.heading-sm-1 {
+  font-family: "Quicksand-bold", sans-serif;
+  color: #253d4e;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0;
+}
+.form-group {
+  margin-bottom: 1rem;
+  .image-upload {
+    img {
+      position: relative;
+      overflow: hidden;
+      width: 220px;
+      cursor: pointer;
+      border-radius: 50%;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 30px auto;
+    }
+  }
+  label {
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #7e7e7ec4;
+    font-family: "Lato", sans-serif;
+  }
+  input {
+    background: #fff;
+    border: 1px solid #ececec;
+    height: 64px;
+    box-shadow: none;
+    padding-left: 20px;
+    font-size: 16px;
+    width: 100%;
+    border-radius: 10px;
+    &:focus {
+      background: transparent;
+      border-color: #bce3c9;
+      box-shadow: none;
+    }
+  }
+  .form-control {
+    color: #000;
+    font-family: "Lato", sans-serif;
+    font-size: 16px;
+  }
+}
+.account {
+  .card {
+    border: 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border-radius: 0.25rem;
+    .cart-header {
+      padding: 1rem;
+      margin-bottom: 0;
+    }
+    .card-body {
+      padding: 1rem !important;
+    }
+  }
+}

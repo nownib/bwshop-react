@@ -54,14 +54,14 @@ const Login = (props) => {
         let username = response.DT.username;
         let email = response.DT.email;
         let token = response.DT.token;
-
+        let phone = response.DT.phone;
+        let avatar = response.DT.avatar;
         let data = {
           isAuthenticated: true,
           token,
-          account: { username, email },
+          account: { username, email, phone, avatar },
         };
-        // window.location.href = process.env.REACT_APP_FRONTEND_URL;
-        // localStorage.setItem("Bearer", token);
+        localStorage.setItem("Bearer", token);
         dispatch(loginRedux(data));
         navigate("/");
       }

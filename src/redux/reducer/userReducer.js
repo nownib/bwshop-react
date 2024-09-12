@@ -2,6 +2,9 @@ import {
   FETCH_USER_REQUEST,
   FETCH_USER_SUCCESS,
   FETCH_USER_ERORR,
+  UPDATE_ACCOUNT_REQUEST,
+  UPDATE_ACCOUNT_SUCCESS,
+  UPDATE_ACCOUNT_ERROR,
   LOGIN,
   LOGOUT,
 } from "../action/types";
@@ -24,12 +27,33 @@ const userReducer = (state = INITIAL_STATE, action) => {
         isAuthenticated: true,
         token: action.userData.token,
         account: {
+          phone: action.userData.phone,
           email: action.userData.email,
           username: action.userData.username,
+          avatar: action.userData.avatar,
         },
       };
     case FETCH_USER_ERORR:
       return { ...state, isLoading: false };
+
+    case UPDATE_ACCOUNT_REQUEST:
+      return { ...state };
+
+    case UPDATE_ACCOUNT_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        isAuthenticated: true,
+        account: {
+          email: action.userData.email,
+          phone: action.userData.phone,
+          username: action.userData.username,
+          avatar: action.userData.avatar,
+        },
+      };
+
+    case UPDATE_ACCOUNT_ERROR:
+      return { ...state, isLoading: true };
 
     case LOGIN:
       return {
@@ -37,8 +61,10 @@ const userReducer = (state = INITIAL_STATE, action) => {
         isAuthenticated: true,
         isLoading: false,
         account: {
+          phone: action.userData.phone,
           email: action.userData.email,
           username: action.userData.username,
+          avatar: action.userData.avatar,
         },
         token: action.userData.token,
       };

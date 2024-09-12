@@ -33,6 +33,10 @@ const Register = (props) => {
       toast.error("User name is required");
       setObjCheckInput({ ...defaultValidInput, isValidUsername: false });
       return false;
+    } else if (username.length > 20) {
+      toast.error("Username must not exceed 20 characters.");
+      setObjCheckInput({ ...defaultValidInput, isValidUsername: false });
+      return false;
     }
     if (!phone) {
       setObjCheckInput({ ...defaultValidInput, isValidPhone: false });

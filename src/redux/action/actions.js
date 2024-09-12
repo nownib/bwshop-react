@@ -40,9 +40,12 @@ import {
   FETCH_BLOG_DETAIL_REQUEST,
   FETCH_BLOG_DETAIL_SUCCESS,
   FETCH_BLOG_DETAIL_ERROR,
+  UPDATE_ACCOUNT_REQUEST,
+  UPDATE_ACCOUNT_SUCCESS,
+  UPDATE_ACCOUNT_ERROR,
 } from "./types";
 import { fetchAllProducts } from "../../services/productService";
-import { getUserAccount } from "../../services/userService";
+import { getUserAccount, updateAccount } from "../../services/userService";
 import { fetchAllBlogs } from "../../services/blogService";
 import {
   addToCart,
@@ -230,10 +233,34 @@ export const fetchUserErorr = () => {
   };
 };
 
-// export const login = (data) => ({
-//   type: LOGIN,
-//   userData: data,
-// });
+export const updateAccountRedux = (userData) => {
+  return async (dispatch, getState) => {
+    dispatch(updateAccountRequest());
+    try {
+      let response = await updateAccount(userData);
+      if (response && response.EC === 0) {
+        dispatch(updateAccountSuccess(userData));
+        toast.success(response.EM);
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch(updateAccountError());
+    }
+  };
+};
+
+export const updateAccountRequest = () => ({
+  type: UPDATE_ACCOUNT_REQUEST,
+});
+
+export const updateAccountSuccess = (userData) => ({
+  type: UPDATE_ACCOUNT_SUCCESS,
+  userData: userData,
+});
+
+export const updateAccountError = () => ({
+  type: UPDATE_ACCOUNT_ERROR,
+});
 
 export const logoutSuccess = () => ({
   type: LOGOUT,
