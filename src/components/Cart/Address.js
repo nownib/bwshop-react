@@ -1,0 +1,220 @@
+import {
+  fetchAllProvinces,
+  fetchDistrictByProvince,
+  fetchWardsByDistrict,
+  addAddress,
+} from "../../services/addressService";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import "./Address.scss";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { fetchAllAddressRedux } from "../../redux/action/actions";
+
+const Address = () => {
+  useEffect(() => {
+    getAllProvinces();
+  }, []);
+
+  const [specificAddress, setSpecificAddress] = useState("");
+  const [province, setProvince] = useState("");
+  const [district, setDistrict] = useState("");
+  const [wards, setWards] = useState("");
+  const [listProvinces, setListProvinces] = useState([]);
+  const [listDistricts, setListDistricts] = useState([]);
+  const [listWards, setListWards] = useState([]);
+  const dispatch = useDispatch();
+  const getAllProvinces = async () => {
+    try {
+      let response = await fetchAllProvinces();
+      if (response && response.EC === 0) {
+        setListProvinces(response.DT);
+      }
+    } catch (error) {
+      console.log("Error get all provinces", error);
+    }
+  };
+
+  const handleOnChangeOptionProvince = async (event) => {
+    try {
+      const id = event.target.value;
+      const selectedIndex = event.target.selectedIndex;
+      const name = event.target.options[selectedIndex].text;
+      setProvince(name);
+      if (id) {
+        let response = await fetchDistrictByProvince(id);
+        if (response && response.EC === 0) {
+          setListDistricts(response.DT);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleOnChangeOptionDistrict = async (event) => {
+    try {
+      const id = event.target.value;
+      const selectedIndex = event.target.selectedIndex;
+      const name = event.target.options[selectedIndex].text;
+      setDistrict(name);
+      if (id) {
+        let response = await fetchWardsByDistrict(id);
+        if (response && response.EC === 0) {
+          setListWards(response.DT);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleOnChangeOptionWards = async (event) => {
+    try {
+      const selectedIndex = event.target.selectedIndex;
+      const name = event.target.options[selectedIndex].text;
+      setWards(name);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const checkValidInput = () => {
+    if (
+      !province ||
+      province === "Please enter your province" ||
+      !district ||
+      district === "Please enter your district" ||
+      !wards ||
+      wards === "Please enter your wards" ||
+      !specificAddress
+    ) {
+      toast.error("Please enter your address");
+      return false;
+    }
+    return true;
+  };
+
+  const handleClickAddress = async () => {
+    let check = checkValidInput();
+    if (check === true) {
+      let response = await addAddress(
+        province,
+        district,
+        wards,
+        specificAddress
+      );
+      if (response && response.EC === 0) {
+        toast.success(response.EM);
+        console.log(district);
+        setSpecificAddress("");
+      }
+    }
+    dispatch(fetchAllAddressRedux());
+  };
+  return (
+    <main>
+      <div class="address-container">
+        <div class="row d-flex">
+          <div class="col-md-4 col-lg-3">
+            <div class="custome-select mt-20">
+              <select
+                className="form-control"
+                onChange={(event) => handleOnChangeOptionProvince(event)}
+              >
+                <option value="" className="custome-option">
+                  Please enter your province
+                </option>
+                {listProvinces &&
+                  listProvinces.length > 0 &&
+                  listProvinces.map((item) => {
+                    return (
+                      <option
+                        key={item.id}
+                        value={item.id}
+                        className="custome-option"
+                      >
+                        {item.name}
+                      </option>
+                    );
+                  })}
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4 col-lg-3">
+            <div class="custome-select mt-20">
+              <select
+                className="form-control"
+                onChange={(event) => handleOnChangeOptionDistrict(event)}
+              >
+                <option value="" className="custome-option">
+                  Please enter your district
+                </option>
+                {listDistricts &&
+                  listDistricts.length > 0 &&
+                  listDistricts.map((item) => {
+                    return (
+                      <option
+                        key={item.id}
+                        value={item.id}
+                        className="custome-option"
+                      >
+                        {item.name}
+                      </option>
+                    );
+                  })}
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4 col-lg-3">
+            <div class="custome-select mt-20">
+              <select
+                className="form-control"
+                onChange={(event) => handleOnChangeOptionWards(event)}
+              >
+                <option value="" className="custome-option">
+                  Please enter your wards
+                </option>
+                {listWards &&
+                  listWards.length > 0 &&
+                  listWards.map((item) => {
+                    return (
+                      <option
+                        key={item.id}
+                        value={item.id}
+                        className="custome-option"
+                      >
+                        {item.name}
+                      </option>
+                    );
+                  })}
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row d-flex mt-2">
+          <div className="col-md-9">
+            <div div class="custome-select mt-20 mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Street name, house number, specific address"
+                value={specificAddress}
+                onChange={(event) => setSpecificAddress(event.target.value)}
+              />
+            </div>
+          </div>
+          <div class="col-md-3 mt-20 mb-50 d-flex justify-content-center">
+            <button
+              type="submit"
+              class="btn btn-add-address"
+              onClick={() => handleClickAddress()}
+            >
+              Add address
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+};
+
+export default Address;

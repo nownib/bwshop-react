@@ -28,7 +28,6 @@ const Wishlist = () => {
   useEffect(() => {
     if (user && user.isAuthenticated === true) {
       dispatch(fetchAllItemsInWishlistRedux());
-      console.log("alo", listProductsInWishlist);
     } else {
       navigate("/login");
     }
@@ -146,10 +145,7 @@ const Wishlist = () => {
                                         handleClickAddToCart(item.id)
                                       }
                                     >
-                                      <i
-                                        className="fa fa-shopping-cart"
-                                        aria-hidden="true"
-                                      />
+                                      <i class="fa-solid fa-cart-shopping"></i>
                                       {"  "}
                                       Add to cart
                                     </button>
@@ -161,10 +157,7 @@ const Wishlist = () => {
                                         handleDeleteProductInWishlist(item)
                                       }
                                     >
-                                      <i
-                                        class="fa fa-trash-o"
-                                        aria-hidden="true"
-                                      ></i>
+                                      <i class="fa-regular fa-trash-can"></i>
                                     </button>
                                   </td>
                                 </tr>

@@ -1,33 +1,50 @@
 import {
-  ADD_ORDER_REQUEST,
-  ADD_ORDER_SUCCESS,
-  ADD_ORDER_ERROR,
+  FETCH_ORDER_BY_ID_REQUEST,
+  FETCH_ORDER_BY_ID_SUCCESS,
+  FETCH_ORDER_BY_ID_ERROR,
+  FETCH_ORDER_DETAILS_REQUEST,
+  FETCH_ORDER_DETAILS_SUCCESS,
+  FETCH_ORDER_DETAILS_ERROR,
 } from "../action/types";
 
 const INITIAL_STATE = {
   isLoading: false,
+  listOrders: [],
   orderDetails: [],
 };
 
 const orderReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case ADD_ORDER_REQUEST:
+    case FETCH_ORDER_BY_ID_REQUEST:
+      return { ...state, isLoading: true };
+
+    case FETCH_ORDER_BY_ID_SUCCESS:
       return {
         ...state,
-        isLoading: true,
+        isLoading: false,
+        listOrders: action.listOrders,
       };
-
-    case ADD_ORDER_SUCCESS:
+    case FETCH_ORDER_BY_ID_ERROR:
       return {
         ...state,
         isLoading: false,
       };
 
-    case ADD_ORDER_ERROR:
+    case FETCH_ORDER_DETAILS_REQUEST:
+      return { ...state, isLoading: true };
+
+    case FETCH_ORDER_DETAILS_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        orderDetails: action.orderItems,
+      };
+    case FETCH_ORDER_DETAILS_ERROR:
       return {
         ...state,
         isLoading: false,
       };
+
     default:
       return state;
   }

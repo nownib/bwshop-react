@@ -27,6 +27,14 @@ const addOrder = (data) => {
   return axios.post("/api/order/create", { data });
 };
 
+const fetchOrdersById = () => {
+  return axios.get("/api/order/read");
+};
+
+const fetchOrderDetails = (orderId) => {
+  return axios.post("/api/order/details", { orderId });
+};
+
 export {
   addToCart,
   fetchAllItemsInCart,
@@ -34,4 +42,6 @@ export {
   updateToCart,
   clearCart,
   addOrder,
+  fetchOrdersById,
+  fetchOrderDetails,
 };

@@ -31,6 +31,11 @@ const loginWithGoogle = () => {
 const updateAccount = (userData) => {
   return axios.put("/api/account/update", { userData });
 };
+
+const uploadAndGetImage = (formData) => {
+  return axios.post("/api/account/upload-image", formData);
+};
+
 export {
   registerUser,
   loginUser,
@@ -38,4 +43,5 @@ export {
   logoutUser,
   loginWithGoogle,
   updateAccount,
+  uploadAndGetImage,
 };

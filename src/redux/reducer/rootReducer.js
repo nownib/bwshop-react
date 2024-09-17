@@ -8,6 +8,8 @@ import orderReducer from "./orderReducer";
 import wishlistReducer from "../reducer/wishlistReducer";
 import blogReducer from "./blogReducer";
 import blogDetailsReducer from "./blogDetailsReducer";
+import accountReducer from "./accountReducer";
+import addressReducer from "./addressReducer";
 
 const rootReducer = combineReducers({
   counter: counterReducer,
@@ -19,6 +21,8 @@ const rootReducer = combineReducers({
   wishlist: wishlistReducer,
   blog: blogReducer,
   blogDetails: blogDetailsReducer,
+  account: accountReducer,
+  address: addressReducer,
 });
 
 export default rootReducer;

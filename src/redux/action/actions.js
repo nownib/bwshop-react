@@ -43,6 +43,16 @@ import {
   UPDATE_ACCOUNT_REQUEST,
   UPDATE_ACCOUNT_SUCCESS,
   UPDATE_ACCOUNT_ERROR,
+  FETCH_ORDER_BY_ID_REQUEST,
+  FETCH_ORDER_BY_ID_SUCCESS,
+  FETCH_ORDER_BY_ID_ERROR,
+  FETCH_ORDER_DETAILS_REQUEST,
+  FETCH_ORDER_DETAILS_SUCCESS,
+  FETCH_ORDER_DETAILS_ERROR,
+  SET_ACTIVE,
+  FETCH_ADDRESS_REQUEST,
+  FETCH_ADDRESS_SUCCESS,
+  FETCH_ADDRESS_ERROR,
 } from "./types";
 import { fetchAllProducts } from "../../services/productService";
 import { getUserAccount, updateAccount } from "../../services/userService";
@@ -54,13 +64,50 @@ import {
   updateToCart,
   clearCart,
   addOrder,
+  fetchOrdersById,
+  fetchOrderDetails,
 } from "../../services/cartService";
 import {
   addProductToWishlist,
   fetchAllItemsInWishlist,
   deleteProductInWishlist,
 } from "../../services/wishlistService";
+import { fetchAllAddressByUser } from "../../services/addressService";
 import { toast } from "react-toastify";
+
+export const fetchAllAddressRedux = () => {
+  return async (dispatch, getState) => {
+    dispatch(fetchAddressRequest());
+    try {
+      const response = await fetchAllAddressByUser();
+      if (response && response.EC === 0) {
+        dispatch(fetchAddressSuccess(response.DT));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(fetchAddressSuccess());
+    }
+  };
+};
+
+export const fetchAddressRequest = () => {
+  return {
+    type: FETCH_ADDRESS_REQUEST,
+  };
+};
+
+export const fetchAddressSuccess = (data) => {
+  return {
+    type: FETCH_ADDRESS_SUCCESS,
+    listAddress: data,
+  };
+};
+
+export const fetchAddressError = () => {
+  return {
+    type: FETCH_ADDRESS_ERROR,
+  };
+};
 
 export const fetchAllItemsInCartRedux = () => {
   return async (dispatch, getState) => {
@@ -368,6 +415,74 @@ export const increaseCounter = () => {
   };
 };
 
+export const fetchOrderDetailsRedux = (orderId) => {
+  return async (dispatch, getState) => {
+    dispatch(fetchOrderDetailsRequest());
+    try {
+      const response = await fetchOrderDetails(orderId);
+      if (response && response.EC === 0) {
+        let data = response && response.DT ? response.DT : [];
+        dispatch(fetchOrderDetailsSuccess(data));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(fetchOrderDetailsError());
+    }
+  };
+};
+
+export const fetchOrderDetailsRequest = () => {
+  return {
+    type: FETCH_ORDER_DETAILS_REQUEST,
+  };
+};
+
+export const fetchOrderDetailsSuccess = (data) => {
+  return {
+    type: FETCH_ORDER_DETAILS_SUCCESS,
+    orderItems: data,
+  };
+};
+export const fetchOrderDetailsError = () => {
+  return {
+    type: FETCH_ORDER_DETAILS_ERROR,
+  };
+};
+
+export const fetchOrdersByIdRedux = () => {
+  return async (dispatch, getState) => {
+    dispatch(fetchOrdersByIdRequest());
+    try {
+      const response = await fetchOrdersById();
+      if (response && response.EC === 0) {
+        const data = response && response.DT ? response.DT : [];
+        dispatch(fetchOrdersByIdSuccess(data));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(fetchOrdersByIdError());
+    }
+  };
+};
+
+export const fetchOrdersByIdRequest = () => {
+  return {
+    type: FETCH_ORDER_BY_ID_REQUEST,
+  };
+};
+
+export const fetchOrdersByIdSuccess = (data) => {
+  return {
+    type: FETCH_ORDER_BY_ID_SUCCESS,
+    listOrders: data,
+  };
+};
+export const fetchOrdersByIdError = () => {
+  return {
+    type: FETCH_ORDER_BY_ID_ERROR,
+  };
+};
+
 export const addOrderRedux = (data) => {
   return async (dispatch, getState) => {
     dispatch(addOrderRequest());
@@ -384,6 +499,7 @@ export const addOrderRedux = (data) => {
     }
   };
 };
+
 export const addOrderRequest = () => {
   return {
     type: ADD_ORDER_REQUEST,
@@ -551,5 +667,12 @@ export const fetchBlogDetailsSuccess = (id) => {
 export const fetchBlogDetailsError = () => {
   return {
     type: FETCH_BLOG_DETAIL_ERROR,
+  };
+};
+
+export const setActiveRedux = (index) => {
+  return {
+    type: SET_ACTIVE,
+    index: index,
   };
 };

@@ -1,64 +1,61 @@
+import React, { useEffect } from "react";
 import {
   PayPalScriptProvider,
   PayPalButtons,
   usePayPalScriptReducer,
 } from "@paypal/react-paypal-js";
-import { useEffect } from "react";
 import { addOrderRedux } from "../../redux/action/actions";
 import { toast } from "react-toastify";
 
-const Paypal = (props) => {
-  const style = { layout: "vertical" };
-  const { amount, address, paymentMethod, orderDetails } = props;
+const ButtonWrapper = React.memo(
+  ({ currency, amount, address, paymentMethod, orderDetails, method }) => {
+    const [{ options }, dispatch] = usePayPalScriptReducer();
 
-  if (!orderDetails || orderDetails.length === 0) {
-    toast.error("Cart is empty!");
-    return;
-  }
-  const ButtonWrapper = ({ currency, showSpinner, amount }) => {
-    const [{ isPending, options }, dispatch] = usePayPalScriptReducer();
-    // useEffect(() => {
-    //   dispatch({
-    //     type: "resetOptions",
-    //     value: { ...options, currency: currency },
-    //   });
-    // }, [currency]);
+    useEffect(() => {
+      dispatch({
+        type: "resetOptions",
+        value: { ...options, currency: currency },
+      });
+    }, [currency, method]);
+
     return (
-      <>
-        {showSpinner && isPending && <div className="spinner" />}
-        <PayPalButtons
-          style={style}
-          disabled={false}
-          forceReRender={[style, currency, amount]}
-          fundingSource={undefined}
-          createOrder={(data, actions) =>
-            actions.order
-              .create({
-                purchase_units: [
-                  {
-                    amount: { currency_code: currency, value: amount },
-                  },
-                ],
-              })
-              .then((orderID) => orderID)
-          }
-          onApprove={(data, actions) =>
-            actions.order.capture().then(async (response) => {
-              if (response.status === "COMPLETED") {
-                let data = {
-                  totalPrice: amount,
-                  address: address,
-                  paymentMethod: paymentMethod,
-                  paymentStatus: "PAID",
-                };
-                dispatch(addOrderRedux(data));
-              }
+      <PayPalButtons
+        style={{ layout: "vertical" }}
+        disabled={false}
+        forceReRender={[currency, amount]}
+        fundingSource={undefined}
+        createOrder={(data, actions) =>
+          actions.order
+            .create({
+              purchase_units: [
+                {
+                  amount: { currency_code: currency, value: amount },
+                },
+              ],
             })
-          }
-        />
-      </>
+            .then((orderID) => orderID)
+        }
+        onApprove={(data, actions) =>
+          actions.order.capture().then(async (response) => {
+            if (response.status === "COMPLETED") {
+              const data = {
+                totalPrice: amount,
+                address: address,
+                paymentMethod: paymentMethod,
+                paymentStatus: "PAID",
+                products: orderDetails,
+              };
+              dispatch(addOrderRedux(data));
+            }
+          })
+        }
+      />
     );
-  };
+  }
+);
+
+const Paypal = (props) => {
+  const { amount, address, paymentMethod, orderDetails, method } = props;
 
   return (
     <PayPalScriptProvider
@@ -68,8 +65,16 @@ const Paypal = (props) => {
         currency: "USD",
       }}
     >
-      <ButtonWrapper showSpinner={false} currency={"USD"} amount={amount} />
+      <ButtonWrapper
+        method={method}
+        currency={"USD"}
+        amount={amount}
+        address={address}
+        paymentMethod={paymentMethod}
+        orderDetails={orderDetails}
+      />
     </PayPalScriptProvider>
   );
 };
+
 export default Paypal;

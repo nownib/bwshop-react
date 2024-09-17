@@ -7,6 +7,7 @@ import {
   updateProductInCartsRedux,
   clearCartRedux,
   addOrderRedux,
+  fetchAllAddressRedux,
 } from "../../redux/action/actions";
 import { useEffect, useState } from "react";
 import { Audio } from "react-loader-spinner";
@@ -14,14 +15,21 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Paypal from "./Paypal";
+import Address from "./Address";
 
 const Cart = () => {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [addressShipping, setAddressShipping] = useState("");
+  const [checkedAddress, setCheckedAddress] = useState(null);
+  const listAddress = useSelector((state) => {
+    return state.address.listAddress;
+  });
   const listProductsInCart = useSelector((state) => {
     return state.cart.listProductsInCart;
   });
+
   const isLoading = useSelector((state) => state.cart.isLoading);
   const [tempQuantities, setTempQuantities] = useState(
     listProductsInCart.reduce((acc, item) => {
@@ -40,6 +48,7 @@ const Cart = () => {
     .toFixed(2);
 
   const cartSelected = listProductsInCart.map((item) => ({
+    id: item.id,
     name: item.name,
     sku: item.sku,
     quantity:
@@ -49,12 +58,11 @@ const Cart = () => {
     price: item.price,
   }));
 
-  const [paymentMethod, setPaymentMethod] = useState("CashPayment");
-
   useEffect(() => {
-    // window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
     if (user && user.isAuthenticated === true) {
       dispatch(fetchAllItemsInCartRedux());
+      dispatch(fetchAllAddressRedux());
     } else {
       navigate("/login");
     }
@@ -70,13 +78,6 @@ const Cart = () => {
     let productId = value.id;
     dispatch(deleteProductInCartRedux(productId));
   };
-
-  // const throttledUpdate = throttle((productId, quantity) => {
-  //   dispatch(updatedProductInCartsRedux(productId, quantity));
-  // }, 10000); //
-  // const handleQuantityChangeDebounced = debounce((productId, quantity) => {
-  //   dispatch(updateProductInCartsRedux(productId, quantity));
-  // }, 500);
 
   const handleQuantityChange = (quantity, item) => {
     if (quantity >= 1 && quantity <= item.stock) {
@@ -97,18 +98,28 @@ const Cart = () => {
     toast.error("Coupon is valid!");
   };
 
-  const handleChangePaymentMethod = (value) => {
-    setPaymentMethod(value);
-  };
-
   const handleClickCheckOut = () => {
-    let data = {
-      totalPrice: totalAmount,
-      address: "Ngã tư đường",
-      paymentMethod: "Cash",
-      paymentStatus: "NOT YET PAID",
-    };
-    dispatch(addOrderRedux(data));
+    if (listProductsInCart && listProductsInCart.length > 0) {
+      let data = {
+        totalPrice: totalAmount,
+        address: addressShipping,
+        paymentMethod: "Cash on delivery",
+        paymentStatus: "NOT YET PAID",
+        products: cartSelected,
+      };
+      dispatch(addOrderRedux(data));
+    }
+  };
+  const handleCheckboxAddress = (item) => {
+    if (checkedAddress === item.id) {
+      setCheckedAddress(null);
+      setAddressShipping("");
+    } else {
+      setCheckedAddress(item.id);
+      setAddressShipping(
+        `${item.specificAddress}, ${item.wards}, ${item.district}, ${item.province}`
+      );
+    }
   };
   return (
     <>
@@ -147,8 +158,7 @@ const Cart = () => {
                         className="text-muted-clear"
                         onClick={() => hanldeDeleteAllCart()}
                       >
-                        <i class="fa fa-trash-o" aria-hidden="true"></i> Clear
-                        cart
+                        <i class="fa-regular fa-trash-can"></i> Clear cart
                       </div>
                     </h6>
                   </div>
@@ -255,10 +265,7 @@ const Cart = () => {
                                         handleDeleteProductInCart(item)
                                       }
                                     >
-                                      <i
-                                        class="fa fa-trash-o"
-                                        aria-hidden="true"
-                                      ></i>
+                                      <i class="fa-regular fa-trash-can"></i>
                                     </button>
                                   </td>
                                 </tr>
@@ -280,6 +287,9 @@ const Cart = () => {
                       Continue Shopping
                     </Link>
                   </div>
+                  <div className="mt-4">
+                    <Address />
+                  </div>
                 </div>
                 <div className="col-lg-4">
                   <div className="row cart-total-header">
@@ -297,11 +307,7 @@ const Cart = () => {
                             className="btn-apply"
                             onClick={() => handleApply()}
                           >
-                            <i
-                              class="fa fa-shirtsinbulk"
-                              aria-hidden="true"
-                            ></i>{" "}
-                            Apply
+                            <i class="fa-solid fa-ticket"></i> Apply
                           </button>
                         </div>
                       </div>
@@ -320,20 +326,7 @@ const Cart = () => {
                                 $
                                 {listProductsInCart &&
                                 listProductsInCart.length > 0 ? (
-                                  <>
-                                    {listProductsInCart
-                                      .reduce((total, item) => {
-                                        return (
-                                          total +
-                                          item.price *
-                                            (tempQuantities[item.id] !==
-                                            undefined
-                                              ? tempQuantities[item.id]
-                                              : item.Carts.Cart_Items.quantity)
-                                        );
-                                      }, 0)
-                                      .toFixed(2)}
-                                  </>
+                                  <>{totalAmount}</>
                                 ) : (
                                   <>0.00</>
                                 )}
@@ -378,20 +371,7 @@ const Cart = () => {
                                 $
                                 {listProductsInCart &&
                                 listProductsInCart.length > 0 ? (
-                                  <>
-                                    {listProductsInCart
-                                      .reduce((total, item) => {
-                                        return (
-                                          total +
-                                          item.price *
-                                            (tempQuantities[item.id] !==
-                                            undefined
-                                              ? tempQuantities[item.id]
-                                              : item.Carts.Cart_Items.quantity)
-                                        );
-                                      }, 0)
-                                      .toFixed(2)}
-                                  </>
+                                  <>{+totalAmount + 1}</>
                                 ) : (
                                   <>0.00</>
                                 )}
@@ -404,70 +384,48 @@ const Cart = () => {
                     <br className="line" />
                     <div className="address">
                       <h5>Delivery address</h5>
+                      {listAddress &&
+                        listAddress.length > 0 &&
+                        listAddress.map((item) => {
+                          return (
+                            <div class="mt-3" key={item.id}>
+                              <input
+                                type="checkbox"
+                                className="form-input-checkbox"
+                                checked={checkedAddress === item.id}
+                                onChange={() => handleCheckboxAddress(item)}
+                              />
+                              <span className=" text-address">
+                                {item.specificAddress}, {item.wards},{" "}
+                                {item.district}, {item.province}
+                              </span>
+                            </div>
+                          );
+                        })}
                     </div>
                     <br className="line" />
-
-                    <div className="custome-checkbox">
-                      <div>
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id="CashPayment"
-                          value="CashPayment"
-                          checked={paymentMethod === "CashPayment"}
-                          onChange={(event) =>
-                            handleChangePaymentMethod(event.target.value)
-                          }
-                        />
-                        <label
-                          htmlFor="CashPayment"
-                          className="form-check-label"
-                        >
-                          Cash Payment
-                        </label>
-                      </div>
-                      <div>
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id="CardPayment"
-                          value="CardPayment"
-                          checked={paymentMethod === "CardPayment"}
-                          onChange={(event) =>
-                            handleChangePaymentMethod(event.target.value)
-                          }
-                        />
-                        <label
-                          htmlFor="CardPayment"
-                          className="form-check-label"
-                        >
-                          Credit Card Payment
-                        </label>
-                      </div>
-                    </div>
                     <div>
-                      {paymentMethod === "CardPayment" ? (
-                        <>
-                          <div
-                            style={{ maxWidth: "750px", minHeight: "100px" }}
-                          >
-                            <Paypal
-                              address={"Ngã 3 chợ Muối"}
-                              paymentMethod={"Paypal"}
-                              amount={totalAmount}
-                              orderDetails={cartSelected}
-                            />
-                          </div>
-                        </>
-                      ) : (
+                      <div class="mb-3 mt-4">
                         <button
                           type="button"
                           className="btn btn-checkout"
                           onClick={() => handleClickCheckOut()}
                         >
-                          Proceed To CheckOut
+                          <span>
+                            <i class="fa-solid fa-money-check-dollar"></i>{" "}
+                            Proceed To CheckOut
+                          </span>
                         </button>
-                      )}
+                      </div>
+
+                      <div style={{ maxWidth: "750px" }}>
+                        <Paypal
+                          address={addressShipping}
+                          paymentMethod={"Paypal"}
+                          amount={totalAmount}
+                          orderDetails={cartSelected}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -1,3 +1,18 @@
+.form-input-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 10px;
+  margin-right: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  vertical-align: middle;
+}
+.text-address {
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  color: #253d4e;
+  vertical-align: middle;
+}
 .btn-template {
   text-decoration: none;
   position: relative;
@@ -20,6 +35,7 @@
     box-shadow: 5px 5px 15px #0000000d;
   }
 }
+
 .cart-container {
   @media only screen and (min-width: 1200px) {
     .container {
@@ -103,6 +119,12 @@
   .mt-50 {
     margin-top: 50px;
   }
+  .mt-30 {
+    margin-top: 30px;
+  }
+  .mb-50 {
+    margin-bottom: 50px;
+  }
   .cart-total-header {
     .p-40 {
       padding: 0 20px 40px 30px;
@@ -139,13 +161,14 @@
           @extend .btn-template;
           font-size: 16px;
           border: 0;
+          border-radius: 10px;
         }
       }
     }
   }
   .cart-total-body {
     margin: 0 20px 0 30px;
-    padding: 30px 25px;
+    padding: 30px 25px 25px 25px;
     border-radius: 15px;
     box-shadow: 5px 5px 15px #0000000d;
     border: 1px solid #ececec;
@@ -234,6 +257,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer !important;
   }
   .mb-80 {
     margin-bottom: 80px;
@@ -281,7 +305,6 @@
   .back-to-shop {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 50px;
     .btn-back {
       @extend .btn-template;
     }

@@ -52,6 +52,25 @@
   color: #3bb77e !important;
   font-weight: 700;
 }
+@media only screen and (max-width: 1024px) {
+  .text-title {
+    font-size: 40px;
+  }
+  .newsletter-inner {
+    padding: 84px 78px !important;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .text-title {
+    font-size: 22px;
+  }
+}
+@media only screen and (max-width: 496px) {
+  .newsletter-inner {
+    padding: 20px !important;
+  }
+}
+
 .text-title {
   font-family: "Quicksand-bold", sans-serif;
   color: #253d4e;

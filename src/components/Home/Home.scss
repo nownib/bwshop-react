@@ -54,18 +54,87 @@
     width: 100%;
     height: 540px;
     display: flex;
+    user-select: none;
+
+    &:hover {
+      .slide-transition {
+        opacity: 1 !important;
+      }
+    }
+    .fade-in {
+      animation-name: fade-in;
+      animation-duration: 1s;
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
     .left-slide {
       box-sizing: border-box;
       height: 100%;
       overflow: hidden;
       border-radius: 10px;
       position: relative;
+      .slide-transition {
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        .btn-prev {
+          width: 48px;
+          height: 48px;
+          cursor: pointer;
+          background-color: #fff;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background-color 0.3s ease;
+          font-size: 22px;
+          color: #7e7e7e7e;
+          position: absolute;
+          left: 20px;
+          &:hover {
+            background-color: #3bb77e;
+            color: #fff;
+          }
+        }
+        .btn-next {
+          width: 48px;
+          height: 48px;
+          cursor: pointer;
+          background-color: #ffffffc5;
+          border-radius: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background-color 0.3s ease;
+          font-size: 22px;
+          color: #7e7e7e7e;
+          position: absolute;
+          right: 20px;
+          &:hover {
+            background-color: #3bb77e;
+            color: #fff;
+          }
+        }
+      }
       .pagination-slide {
         text-align: center;
         position: absolute;
         bottom: 10px;
         width: 100%;
         .dot {
+          border: 0;
           cursor: pointer;
           height: 15px;
           width: 15px;
@@ -79,19 +148,7 @@
           background-color: #3bb77e;
         }
       }
-      .fade-in {
-        animation-name: fade-in;
-        animation-duration: 1s;
-      }
 
-      @keyframes fade-in {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
       .fade-on {
         animation-name: fade-on;
         animation-duration: 1s;
@@ -145,6 +202,7 @@
         top: 55%;
         left: 10%;
         position: absolute;
+
         a {
           font-size: 12px;
           text-decoration: none;
@@ -157,12 +215,6 @@
           transition: all 0.3s ease-in-out;
           &:hover {
             background-color: #fdc040;
-          }
-          span {
-            transition: all 0.3s ease-in-out;
-            &:hover {
-              padding-right: 5px;
-            }
           }
         }
       }
@@ -323,22 +375,22 @@
             font-size: 12px;
             width: 100px;
             padding: 5px;
-            bottom: 140%; /* Đặt tooltip bên trên nút */
-            left: 50%; /* Canh giữa theo chiều ngang */
-            transform: translateX(-50%) translateY(10px); /* Bắt đầu bên dưới nút */
-            transition: opacity 0.3s ease, transform 0.3s ease; /* Hiệu ứng mượt mà */
+            bottom: 140%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
           }
 
           .favorite-btn:hover::after {
             visibility: visible;
             opacity: 1;
-            transform: translateX(-50%) translateY(0); /* Hiển thị lên vị trí chuẩn */
+            transform: translateX(-50%) translateY(0);
           }
 
           .favorite-btn:hover::before {
             visibility: visible;
             opacity: 1;
-            transform: translateX(-50%) translateY(0); /* Hiển thị lên vị trí chuẩn */
+            transform: translateX(-50%) translateY(0);
           }
           &:hover {
             color: #fdc040;

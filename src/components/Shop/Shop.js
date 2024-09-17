@@ -112,9 +112,13 @@ const Shop = () => {
   };
 
   const getAllCategories = async () => {
-    let response = await fetchAllCategories();
-    if (response && response.EC === 0) {
-      setListCategories(response.DT);
+    try {
+      let response = await fetchAllCategories();
+      if (response && response.EC === 0) {
+        setListCategories(response.DT);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
   const handleChangePrice = (newPrice) => {
@@ -201,7 +205,7 @@ const Shop = () => {
             </div>
 
             <div className="sidebar-category pt-5 pb-5">
-              <h5>Category</h5>
+              <h5 className="mb-10">Category</h5>
               <select
                 className="form-select"
                 onChange={(event) => handleOnChangeCategory(event.target.value)}
@@ -322,7 +326,7 @@ const Shop = () => {
                                             handleClickAddToWishlist(item.id)
                                           }
                                         >
-                                          <i className="fa fa-heart-o"></i>
+                                          <i class="fa-regular fa-heart"></i>
                                         </span>
                                       </div>
                                     </div>
@@ -358,10 +362,7 @@ const Shop = () => {
                                               handleClickProductDetails(item)
                                             }
                                           >
-                                            <i
-                                              className="fa fa-eye"
-                                              aria-hidden="true"
-                                            ></i>
+                                            <i class="fa-regular fa-eye"></i>
                                             Views
                                           </Link>
                                         </div>

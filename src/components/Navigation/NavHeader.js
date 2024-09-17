@@ -1,7 +1,7 @@
 import React from "react";
 import "./NavHeader.scss";
 import Nav from "react-bootstrap/Nav";
-import { NavLink, useNavigate, Link } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { useState } from "react";
@@ -10,7 +10,7 @@ import Button from "react-bootstrap/Button";
 import Logo from "../../assets/images/logo.png";
 import { logoutUser } from "../../services/userService";
 import { toast } from "react-toastify";
-import { logoutRedux } from "../../redux/action/actions";
+import { logoutRedux, setActiveRedux } from "../../redux/action/actions";
 import { useSelector, useDispatch } from "react-redux";
 import { Audio } from "react-loader-spinner";
 // import { fetchUserRedux } from "../../redux/action/actions";
@@ -28,7 +28,7 @@ const NavHeader = (props) => {
   );
   let navigate = useNavigate();
   const [show, setShow] = useState(false);
-
+  const active = useSelector((state) => state.account.active);
   const showDropdown = () => {
     setShow(true);
   };
@@ -57,21 +57,31 @@ const NavHeader = (props) => {
   // };
 
   const handleClickAccount = () => {
+    dispatch(setActiveRedux(0));
     navigate("/account");
   };
+  const handleClickOrder = () => {
+    dispatch(setActiveRedux(1));
+    navigate("/account/orders");
+  };
+  const handleClickAddress = () => {
+    dispatch(setActiveRedux(2));
+    navigate("/account/address");
+  };
+
   return (
     <>
       <div className="nav-header">
         <Navbar expand="lg" className="bg-body-tertiary" fixed="top">
           <Navbar.Brand href="/">
             <div className="logo-container">
-              <img src={Logo} alt="logo" width="175" height="75" />
+              <img src={Logo} alt="logo" width="170" height="75" />
             </div>
           </Navbar.Brand>
           <div className="right-container">
             <Nav className="d-lg-none m-0 p-0">
               <NavLink to="/wishlist" className="p-0 me-2">
-                <i className="fa fa-heart-o group-icon" aria-hidden="true">
+                <i class="fa-regular fa-heart group-icon">
                   <span className="notification-badge">
                     {listProductsInWishlist.length > 0
                       ? listProductsInWishlist.length
@@ -82,10 +92,7 @@ const NavHeader = (props) => {
             </Nav>
             <Nav className="d-lg-none m-0 p-0">
               <NavLink to="/cart" className="p-0 me-2">
-                <i
-                  className="fa fa-shopping-cart group-icon"
-                  aria-hidden="true"
-                >
+                <i class="fa-solid fa-cart-shopping group-icon">
                   <span className="notification-badge">
                     {listProductsInCart.length}
                   </span>
@@ -133,10 +140,7 @@ const NavHeader = (props) => {
                       <NavDropdown
                         title={
                           <span onClick={() => handleClickAccount()}>
-                            <i
-                              className="fa fa-user-o group-icon"
-                              aria-hidden="true"
-                            ></i>
+                            <i class="fa-regular fa-user group-icon"></i>
                             {user && isLoading === false
                               ? user.account.username
                               : ""}
@@ -151,16 +155,13 @@ const NavHeader = (props) => {
                             className="menu-item"
                             onClick={() => handleClickAccount()}
                           >
-                            <i className="fa fa-user-o" aria-hidden="true"></i>
+                            <i class="fa-regular fa-user group-icon"></i>
                             My Account
                           </div>
                         </NavDropdown.Item>
                         <NavDropdown.Item>
                           <div className="menu-item">
-                            <i
-                              className="fa fa-shopping-bag"
-                              aria-hidden="true"
-                            ></i>
+                            <i class="fa-solid fa-bag-shopping"></i>
                             Order Tracking
                           </div>
                         </NavDropdown.Item>
@@ -178,10 +179,7 @@ const NavHeader = (props) => {
                             className="menu-item"
                             onClick={() => handleLogout()}
                           >
-                            <i
-                              className="fa fa-sign-out"
-                              aria-hidden="true"
-                            ></i>
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
                             Sign out
                           </div>
                         </NavDropdown.Item>
@@ -207,7 +205,7 @@ const NavHeader = (props) => {
                 </>
               ) : (
                 <NavLink to="/login" className="nav-link">
-                  <i className="fa fa-user-o group-icon" aria-hidden="true"></i>
+                  <i class="fa-regular fa-user group-icon"></i>
                   <span>Login</span>
                 </NavLink>
               )}
@@ -215,7 +213,7 @@ const NavHeader = (props) => {
           </Navbar.Collapse>
           <Nav className="mx-auto d-none d-lg-flex">
             <NavLink to="/wishlist" className="nav-link">
-              <i className="fa fa-heart-o group-icon" aria-hidden="true">
+              <i class="fa-regular fa-heart group-icon">
                 <span className="notification-badge">
                   {listProductsInWishlist.length > 0
                     ? listProductsInWishlist.length
@@ -225,7 +223,7 @@ const NavHeader = (props) => {
               <span>Wishlist</span>
             </NavLink>
             <NavLink to="/cart" className="nav-link">
-              <i className="fa fa-shopping-cart group-icon" aria-hidden="true">
+              <i class="fa-solid fa-cart-shopping group-icon">
                 <span className="notification-badge">
                   {listProductsInCart.length > 0
                     ? listProductsInCart.length
@@ -241,10 +239,7 @@ const NavHeader = (props) => {
                     <NavDropdown
                       title={
                         <span onClick={() => handleClickAccount()}>
-                          <i
-                            className="fa fa-user-o group-icon"
-                            aria-hidden="true"
-                          ></i>
+                          <i class="fa-regular fa-user group-icon"></i>
                           {user && isLoading === false
                             ? user.account.username
                             : ""}
@@ -259,25 +254,25 @@ const NavHeader = (props) => {
                           className="menu-item"
                           onClick={() => handleClickAccount()}
                         >
-                          <i className="fa fa-user-o" aria-hidden="true"></i>
+                          <i class="fa-regular fa-user"></i>
                           My Account
                         </div>
                       </NavDropdown.Item>
                       <NavDropdown.Item>
-                        <div className="menu-item">
-                          <i
-                            className="fa fa-shopping-bag"
-                            aria-hidden="true"
-                          ></i>
+                        <div
+                          className="menu-item"
+                          onClick={() => handleClickOrder()}
+                        >
+                          <i class="fa-solid fa-bag-shopping"></i>
                           Order Tracking
                         </div>
                       </NavDropdown.Item>
                       <NavDropdown.Item>
-                        <div className="menu-item">
-                          <i
-                            className="fa fa-map-marker"
-                            aria-hidden="true"
-                          ></i>
+                        <div
+                          className="menu-item"
+                          onClick={() => handleClickAddress()}
+                        >
+                          <i class="fa-solid fa-location-dot"></i>
                           Address
                         </div>
                       </NavDropdown.Item>
@@ -286,7 +281,7 @@ const NavHeader = (props) => {
                           className="menu-item"
                           onClick={() => handleLogout()}
                         >
-                          <i className="fa fa-sign-out" aria-hidden="true"></i>
+                          <i class="fa-solid fa-arrow-right-from-bracket"></i>
                           Sign out
                         </div>
                       </NavDropdown.Item>
@@ -298,7 +293,7 @@ const NavHeader = (props) => {
               </>
             ) : (
               <NavLink to="/login" className="nav-link">
-                <i className="fa fa-user-o group-icon" aria-hidden="true"></i>
+                <i class="fa-regular fa-user group-icon"></i>
                 <span>Login</span>
               </NavLink>
             )}

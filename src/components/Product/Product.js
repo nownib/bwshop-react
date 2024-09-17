@@ -134,7 +134,7 @@ const ProductDetails = () => {
                                 handleClickAddToWishlist(productDetails.id)
                               }
                             >
-                              <i className="fa fa-heart-o"></i>
+                              <i class="fa-regular fa-heart"></i>
                             </button>
                           </div>
                           <div className="details-footer m-0">

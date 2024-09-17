@@ -98,35 +98,36 @@ const Home = (props) => {
                   </div>
                 </>
               )}
-
-              <a class="prev" onclick="">
-                ❮
-              </a>
-              <a class="next" onclick="">
-                ❯
-              </a>
+              <div className="slide-transition">
+                <span className="btn-prev" onClick={() => prevSlide()}>
+                  ❮
+                </span>
+                <span className="btn-next" onClick={() => nextSlide()}>
+                  ❯
+                </span>
+              </div>
               <div className="pagination-slide">
                 <span
-                  class={`dot ${slideIndex === 0 ? "dot-active" : ""}`}
+                  className={`dot ${slideIndex === 0 ? "dot-active" : ""}`}
                   onClick={() => setSlideIndex(0)}
                 ></span>
                 <span
-                  class={`dot ${slideIndex === 1 ? "dot-active" : ""}`}
+                  className={`dot ${slideIndex === 1 ? "dot-active" : ""}`}
                   onClick={() => setSlideIndex(1)}
                 ></span>
               </div>
             </div>
 
             <div className=" col-xl-4 d-none d-xl-block p-0 ps-4">
-              <div className="right-slide">
-                <img src={slide2} alt="true" />
-                <div className="remind-3">
+              <div className="right-slide ">
+                <img src={slide2} alt="true" className="fade-in" />
+                <div className="remind-3 fade-in">
                   Delivered to<span className="color-home">your home</span>
                 </div>
-                <div className="go-shop-btn">
+                <div className="go-shop-btn fade-in">
                   <Link to="/shop">
                     <span>Shop Now </span>
-                    <i className="fa fa-arrow-right" aria-hidden="true"></i>
+                    <i class="fa-solid fa-arrow-right"></i>
                   </Link>
                 </div>
               </div>
@@ -184,7 +185,7 @@ const Home = (props) => {
                                     handleClickAddToWishlist(item.id)
                                   }
                                 >
-                                  <i className="fa fa-heart-o"></i>
+                                  <i class="fa-regular fa-heart"></i>
                                 </span>
                               </div>
                             </div>
@@ -220,10 +221,7 @@ const Home = (props) => {
                                       handleClickProductDetails(item)
                                     }
                                   >
-                                    <i
-                                      className="fa fa-eye"
-                                      aria-hidden="true"
-                                    ></i>
+                                    <i class="fa-regular fa-eye"></i>
                                     Views
                                   </Link>
                                 </div>

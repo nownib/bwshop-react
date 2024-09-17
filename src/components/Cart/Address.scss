@@ -1,0 +1,56 @@
+.custome-select {
+  position: relative;
+  width: 100%;
+  .form-control {
+    border: 1px solid #f0e9ff;
+    border-radius: 10px;
+    height: 48px;
+    font-size: 15px;
+    background: transparent;
+    width: 100% !important;
+    font-family: "Quicksand", sans-serif;
+    font-weight: 600;
+    line-height: 1.5;
+    color: #212529;
+    padding-top: 7px;
+    cursor: pointer;
+    .custome-option {
+      color: #212529;
+      font-family: "Roboto", sans-serif;
+      font-weight: 500;
+    }
+    &:focus {
+      box-shadow: none;
+      border-color: #3bb77e;
+    }
+  }
+}
+.btn-template {
+  text-decoration: none;
+  position: relative;
+  padding: 12px 30px;
+  border-radius: 4px;
+  background-color: #3bb77e;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: "Quicksand-bold", sans-serif;
+  color: #fff;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease 0s;
+  &:hover {
+    background-color: #fdc040;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 5px 5px 15px #0000000d;
+  }
+}
+.btn-add-address {
+  @extend .btn-template;
+  border-radius: 10px;
+}
+.mt-20 {
+  margin-top: 20px;
+}

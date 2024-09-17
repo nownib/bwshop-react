@@ -33,7 +33,7 @@ const About = (props) => {
                 />
               </div>
               <div className="col-lg-6">
-                <div className="introduce">
+                <div className="introduce ps-0 ps-md-4">
                   <h2 className="mb-30">Welcome to BW Shop</h2>
                   <p className="mb-25">
                     At BW Shop, we take snacking to the next level. As a leading

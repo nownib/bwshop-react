@@ -28,7 +28,6 @@ const Blog = () => {
   };
   useEffect(() => {
     dispatch(fetchAllBlogsRedux());
-    console.log(listBlogs);
   }, [dispatch]);
   return (
     <main>
