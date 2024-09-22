@@ -3,26 +3,47 @@ import {
   fetchDistrictByProvince,
   fetchWardsByDistrict,
   addAddress,
+  updateAddress,
 } from "../../services/addressService";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { useEffect, useState } from "react";
 import "./Address.scss";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { fetchAllAddressRedux } from "../../redux/action/actions";
 
-const Address = () => {
-  useEffect(() => {
-    getAllProvinces();
-  }, []);
-
+const Address = (props) => {
   const [specificAddress, setSpecificAddress] = useState("");
+
+  const [provinceId, setProvinceId] = useState("");
+  const [districtId, setDistrictId] = useState("");
+  const [wardsId, setWardsId] = useState("");
   const [province, setProvince] = useState("");
   const [district, setDistrict] = useState("");
   const [wards, setWards] = useState("");
+
   const [listProvinces, setListProvinces] = useState([]);
   const [listDistricts, setListDistricts] = useState([]);
   const [listWards, setListWards] = useState([]);
   const dispatch = useDispatch();
+  const { actionModalAddress, dataModalAddress } = props;
+  useEffect(() => {
+    getAllProvinces();
+  }, []);
+
+  useEffect(() => {
+    if (actionModalAddress === "UPDATE") {
+      setProvinceId(dataModalAddress?.provinceId);
+      setProvince(dataModalAddress?.province);
+      setDistrictId(dataModalAddress?.districtId);
+      setDistrict(dataModalAddress?.district);
+      setWardsId(dataModalAddress?.wardsId);
+      setWards(dataModalAddress?.wards);
+      setSpecificAddress(dataModalAddress?.specificAddress);
+      getDistrictByProvince(dataModalAddress?.provinceId);
+      getWardsByDistrict(dataModalAddress?.districtId);
+    }
+  }, [dataModalAddress]);
+
   const getAllProvinces = async () => {
     try {
       let response = await fetchAllProvinces();
@@ -33,18 +54,42 @@ const Address = () => {
       console.log("Error get all provinces", error);
     }
   };
-
+  const getDistrictByProvince = async (provinceId) => {
+    try {
+      if (provinceId) {
+        let response = await fetchDistrictByProvince(provinceId);
+        if (response && response.EC === 0) {
+          setListDistricts(response.DT);
+        }
+      }
+    } catch (error) {
+      console.log("Error get district", error);
+    }
+  };
+  const getWardsByDistrict = async (districtId) => {
+    try {
+      if (districtId) {
+        let response = await fetchWardsByDistrict(districtId);
+        if (response && response.EC === 0) {
+          setListWards(response.DT);
+        }
+      }
+    } catch (error) {
+      console.log("Error get wards", error);
+    }
+  };
   const handleOnChangeOptionProvince = async (event) => {
     try {
       const id = event.target.value;
       const selectedIndex = event.target.selectedIndex;
       const name = event.target.options[selectedIndex].text;
-      setProvince(name);
       if (id) {
-        let response = await fetchDistrictByProvince(id);
-        if (response && response.EC === 0) {
-          setListDistricts(response.DT);
-        }
+        setProvinceId(id);
+        setProvince(name);
+        getDistrictByProvince(id);
+        setDistrictId("");
+      } else {
+        setProvinceId("");
       }
     } catch (error) {
       console.log(error);
@@ -56,12 +101,13 @@ const Address = () => {
       const id = event.target.value;
       const selectedIndex = event.target.selectedIndex;
       const name = event.target.options[selectedIndex].text;
-      setDistrict(name);
       if (id) {
-        let response = await fetchWardsByDistrict(id);
-        if (response && response.EC === 0) {
-          setListWards(response.DT);
-        }
+        setDistrictId(id);
+        setDistrict(name);
+        getWardsByDistrict(id);
+        setWardsId("");
+      } else {
+        setDistrictId("");
       }
     } catch (error) {
       console.log(error);
@@ -69,9 +115,15 @@ const Address = () => {
   };
   const handleOnChangeOptionWards = async (event) => {
     try {
+      const id = event.target.value;
       const selectedIndex = event.target.selectedIndex;
       const name = event.target.options[selectedIndex].text;
-      setWards(name);
+      if (id) {
+        setWards(name);
+        setWardsId(id);
+      } else {
+        setWardsId("");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -80,35 +132,52 @@ const Address = () => {
   const checkValidInput = () => {
     if (
       !province ||
-      province === "Please enter your province" ||
       !district ||
-      district === "Please enter your district" ||
       !wards ||
-      wards === "Please enter your wards" ||
-      !specificAddress
+      !specificAddress ||
+      !provinceId ||
+      !districtId ||
+      !wardsId
     ) {
       toast.error("Please enter your address");
       return false;
     }
+    console.log(provinceId);
     return true;
   };
 
   const handleClickAddress = async () => {
     let check = checkValidInput();
     if (check === true) {
-      let response = await addAddress(
-        province,
-        district,
-        wards,
-        specificAddress
-      );
+      let response =
+        actionModalAddress === "CREATE"
+          ? await addAddress(
+              provinceId,
+              districtId,
+              wardsId,
+              province,
+              district,
+              wards,
+              specificAddress
+            )
+          : await updateAddress(
+              dataModalAddress?.id,
+              provinceId,
+              districtId,
+              wardsId,
+              province,
+              district,
+              wards,
+              specificAddress
+            );
       if (response && response.EC === 0) {
         toast.success(response.EM);
-        console.log(district);
-        setSpecificAddress("");
+        if (actionModalAddress === "CREATE") {
+          setSpecificAddress("");
+        }
       }
+      dispatch(fetchAllAddressRedux());
     }
-    dispatch(fetchAllAddressRedux());
   };
   return (
     <main>
@@ -131,6 +200,7 @@ const Address = () => {
                         key={item.id}
                         value={item.id}
                         className="custome-option"
+                        selected={item.id === dataModalAddress?.provinceId}
                       >
                         {item.name}
                       </option>
@@ -156,6 +226,7 @@ const Address = () => {
                         key={item.id}
                         value={item.id}
                         className="custome-option"
+                        selected={item.id === dataModalAddress?.districtId}
                       >
                         {item.name}
                       </option>
@@ -181,6 +252,7 @@ const Address = () => {
                         key={item.id}
                         value={item.id}
                         className="custome-option"
+                        selected={item.id === dataModalAddress?.wardsId}
                       >
                         {item.name}
                       </option>
@@ -208,7 +280,9 @@ const Address = () => {
               class="btn btn-add-address"
               onClick={() => handleClickAddress()}
             >
-              Add address
+              {props.actionModalAddress === "UPDATE"
+                ? "Edit address"
+                : "Add address"}
             </button>
           </div>
         </div>

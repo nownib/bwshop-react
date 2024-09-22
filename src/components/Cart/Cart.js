@@ -99,7 +99,9 @@ const Cart = () => {
   };
 
   const handleClickCheckOut = () => {
-    if (listProductsInCart && listProductsInCart.length > 0) {
+    if (!addressShipping) {
+      toast.error("Please choose shipping address!");
+    } else if (listProductsInCart && listProductsInCart.length > 0) {
       let data = {
         totalPrice: totalAmount,
         address: addressShipping,
@@ -108,8 +110,11 @@ const Cart = () => {
         products: cartSelected,
       };
       dispatch(addOrderRedux(data));
+    } else {
+      toast.error("Cart is empty!");
     }
   };
+
   const handleCheckboxAddress = (item) => {
     if (checkedAddress === item.id) {
       setCheckedAddress(null);
@@ -371,7 +376,7 @@ const Cart = () => {
                                 $
                                 {listProductsInCart &&
                                 listProductsInCart.length > 0 ? (
-                                  <>{+totalAmount + 1}</>
+                                  <>{+totalAmount}</>
                                 ) : (
                                   <>0.00</>
                                 )}
@@ -421,7 +426,7 @@ const Cart = () => {
                       <div style={{ maxWidth: "750px" }}>
                         <Paypal
                           address={addressShipping}
-                          paymentMethod={"Paypal"}
+                          paymentMethod={"Paid via PayPal"}
                           amount={totalAmount}
                           orderDetails={cartSelected}
                         />

@@ -28,7 +28,6 @@ const NavHeader = (props) => {
   );
   let navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const active = useSelector((state) => state.account.active);
   const showDropdown = () => {
     setShow(true);
   };
@@ -160,13 +159,19 @@ const NavHeader = (props) => {
                           </div>
                         </NavDropdown.Item>
                         <NavDropdown.Item>
-                          <div className="menu-item">
+                          <div
+                            className="menu-item"
+                            onClick={() => handleClickOrder()}
+                          >
                             <i class="fa-solid fa-bag-shopping"></i>
                             Order Tracking
                           </div>
                         </NavDropdown.Item>
                         <NavDropdown.Item>
-                          <div className="menu-item">
+                          <div
+                            className="menu-item"
+                            onClick={() => handleClickAddress()}
+                          >
                             <i
                               className="fa fa-map-marker"
                               aria-hidden="true"

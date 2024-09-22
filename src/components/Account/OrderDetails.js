@@ -9,9 +9,7 @@ const OrderDetails = (props) => {
   const dispatch = useDispatch();
   const listOrderItems = useSelector((state) => state.order.orderDetails);
   const orderItems = listOrderItems.orderItems;
-  useEffect(() => {
-    console.log("check", orderItems);
-  }, []);
+
   const handleClickProductDetails = (product) => {
     let productId = product.id;
     dispatch(fetchProductDetailsRedux(productId));
@@ -91,7 +89,7 @@ const OrderDetails = (props) => {
             <></>
           )}
           <div className="mt-5">
-            <h5>
+            <h5 className="mb-2">
               Total payment:{" "}
               <span className="item-total">${listOrderItems.totalPrice}</span>
             </h5>

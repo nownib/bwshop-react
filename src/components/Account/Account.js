@@ -9,7 +9,7 @@ import { logoutUser, uploadAndGetImage } from "../../services/userService";
 import { useNavigate, Link } from "react-router-dom";
 import { logoutRedux } from "../../redux/action/actions";
 import Order from "./Order";
-import Address from "./Address";
+import TableAddress from "./TableAddress";
 
 const Account = () => {
   const user = useSelector((state) => state.user.account);
@@ -41,6 +41,7 @@ const Account = () => {
         let response = await uploadAndGetImage(formData);
         if (response && response.EC === 0) {
           setUserData({ ...userData, avatar: response.DT });
+          setAvatar(file);
         }
       } catch (error) {
         console.log(error);
@@ -110,7 +111,7 @@ const Account = () => {
           <div class="col-lg-10 m-auto">
             <div className="row">
               <div className="col-md-3">
-                <div className="sidebar">
+                <div className="sidebar mb-5">
                   <ul className="nav flex-column">
                     {sidebarItem.map((item, index) => (
                       <li
@@ -209,9 +210,7 @@ const Account = () => {
                             <div class="image-upload">
                               <div>
                                 <img
-                                  src={
-                                    userData?.avatar ? userData?.avatar : avatar
-                                  }
+                                  src={userData?.avatar || avatar}
                                   alt="Avatar"
                                 />
                               </div>
@@ -231,7 +230,7 @@ const Account = () => {
                       </div>
                     </div>
                   ) : (
-                    <>{active === 1 ? <Order /> : <Address />}</>
+                    <>{active === 1 ? <Order /> : <TableAddress />}</>
                   )}
                 </div>
               </div>

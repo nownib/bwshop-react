@@ -176,7 +176,6 @@ const Footer = () => {
                     <img src={icon6} alt="" />
                     <strong className="d-none d-lg-block">Address: </strong>
                     <span>
-                      {" "}
                       Linh Trung, Thu Duc City, Ho Chi Minh City, Vietnam
                     </span>
                   </li>

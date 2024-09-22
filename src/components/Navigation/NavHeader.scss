@@ -1,10 +1,12 @@
 .nav-header {
+  user-select: none;
   .bg-body-tertiary {
     background-color: #fff !important;
     border-bottom: 1px solid #ececec;
   }
   .navbar-toggler {
     border: none;
+    box-shadow: none;
     padding: 0;
     &:hover {
       border: none;
@@ -51,6 +53,10 @@
     .navbar-nav {
       .search-input {
         width: 300px;
+        &:focus {
+          border-color: #3bb77e;
+          box-shadow: none;
+        }
       }
       a,
       .nav-link {

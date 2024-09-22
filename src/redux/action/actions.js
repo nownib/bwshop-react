@@ -488,6 +488,7 @@ export const addOrderRedux = (data) => {
     dispatch(addOrderRequest());
     try {
       let response = await addOrder(data);
+      console.log("check paypal", data);
       if (response && response.EC === 0) {
         dispatch(addOrderSuccess());
         dispatch(clearCartRedux());

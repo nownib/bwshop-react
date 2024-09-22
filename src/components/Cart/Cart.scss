@@ -7,6 +7,7 @@
   font-size: 14px;
   vertical-align: middle;
 }
+
 .text-address {
   font-family: "Roboto", sans-serif;
   font-size: 14px;
@@ -37,7 +38,7 @@
 }
 
 .cart-container {
-  @media only screen and (min-width: 1200px) {
+  @media only screen and (min-width: 992px) {
     .container {
       max-width: 1410px;
     }

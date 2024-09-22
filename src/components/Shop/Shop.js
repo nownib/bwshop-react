@@ -14,9 +14,11 @@ import {
 } from "../../redux/action/actions";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
 
 const Shop = () => {
-  const [price, setPrice] = useState([0, 50]);
+  const [price, setPrice] = useState([0, 20]);
   const [listCategories, setListCategories] = useState([]);
 
   const [categoryId, setCategoryId] = useState();
@@ -136,7 +138,7 @@ const Shop = () => {
   };
 
   const handleClickClear = () => {
-    setPrice([0, 500]);
+    setPrice([0, 20]);
     setApplyFilter(false);
     setCurrentPage(1);
     setSortOption("");
@@ -150,20 +152,9 @@ const Shop = () => {
     return text;
   };
 
-  // const newCount = useSelector((state) => {
-  //   return state.counter.count;
-  // });
-
-  // const handleIncrease = () => {
-  //   dispatch(increaseCounter());
-  // };
-
+  const stars = Array(5).fill(0);
   return (
     <div className="shop-container">
-      {/* <div>Count: {newCount}</div>
-
-      <button onClick={() => handleIncrease()}>Increase Count</button> */}
-
       <div className="container">
         <div className="row">
           <div className="col-lg-1-5 shop-sidebar">
@@ -189,7 +180,7 @@ const Shop = () => {
                     onChange={(event) => handleChangePrice(event.target.value)}
                     getAriaValueText={valuetext}
                     min={0}
-                    max={50}
+                    max={20}
                     sx={{
                       color: "#3bb77e",
                       // "& .MuiSlider-thumb": {
@@ -343,8 +334,22 @@ const Shop = () => {
                                         </Link>
                                       </div>
                                       <div className="product-rate-cover">
-                                        <div className="product-rate">
-                                          <div className="product-rating"></div>
+                                        <div className="product-rate p-0">
+                                          <div className="product-rating">
+                                            {stars.map((_, index) => {
+                                              return (
+                                                <FontAwesomeIcon
+                                                  icon={faStar}
+                                                  style={{
+                                                    height: "14px",
+                                                    width: "14px",
+                                                    cursor: "pointer",
+                                                    color: "#FFBA5A",
+                                                  }}
+                                                />
+                                              );
+                                            })}
+                                          </div>
                                         </div>
                                       </div>
                                       <div className="product-category">

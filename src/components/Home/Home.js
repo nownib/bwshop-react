@@ -12,6 +12,8 @@ import {
   addProductToWishlistRedux,
 } from "../../redux/action/actions";
 import { toast } from "react-toastify";
+import { faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Home = (props) => {
   const dispatch = useDispatch();
@@ -64,6 +66,7 @@ const Home = (props) => {
       toast.error("You need to login to add products to the wishlist!");
     }
   };
+  const stars = Array(5).fill(0);
   return (
     <main className="home-container">
       <div className="container">
@@ -202,8 +205,22 @@ const Home = (props) => {
                                 </Link>
                               </div>
                               <div className="product-rate-cover">
-                                <div className="product-rate">
-                                  <div className="product-rating"></div>
+                                <div className="product-rate p-0">
+                                  <div className="product-rating">
+                                    {stars.map((_, index) => {
+                                      return (
+                                        <FontAwesomeIcon
+                                          icon={faStar}
+                                          style={{
+                                            height: "14px",
+                                            width: "14px",
+                                            cursor: "pointer",
+                                            color: "#FFBA5A",
+                                          }}
+                                        />
+                                      );
+                                    })}
+                                  </div>
                                 </div>
                               </div>
                               <div className="product-category">

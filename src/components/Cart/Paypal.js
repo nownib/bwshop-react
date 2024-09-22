@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   PayPalScriptProvider,
   PayPalButtons,
@@ -6,9 +6,10 @@ import {
 } from "@paypal/react-paypal-js";
 import { addOrderRedux } from "../../redux/action/actions";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 
 const ButtonWrapper = React.memo(
-  ({ currency, amount, address, paymentMethod, orderDetails, method }) => {
+  ({ currency, amount, address, paymentMethod, orderDetails, onSuccess }) => {
     const [{ options }, dispatch] = usePayPalScriptReducer();
 
     useEffect(() => {
@@ -16,14 +17,25 @@ const ButtonWrapper = React.memo(
         type: "resetOptions",
         value: { ...options, currency: currency },
       });
-    }, [currency, method]);
-
+    }, [currency, address, orderDetails, amount]);
+    const handleClick = (data, actions) => {
+      if (!address) {
+        toast.error("Please choose shipping address!");
+        return actions.reject();
+      }
+      if (!orderDetails || orderDetails.length <= 0) {
+        toast.error("Cart is empty!");
+        return actions.reject();
+      }
+      return actions.resolve();
+    };
     return (
       <PayPalButtons
         style={{ layout: "vertical" }}
         disabled={false}
         forceReRender={[currency, amount]}
         fundingSource={undefined}
+        onClick={(data, actions) => handleClick(data, actions)}
         createOrder={(data, actions) =>
           actions.order
             .create({
@@ -43,9 +55,9 @@ const ButtonWrapper = React.memo(
                 address: address,
                 paymentMethod: paymentMethod,
                 paymentStatus: "PAID",
-                products: orderDetails,
+                products: orderDetails ? orderDetails : [],
               };
-              dispatch(addOrderRedux(data));
+              onSuccess(data);
             }
           })
         }
@@ -55,8 +67,19 @@ const ButtonWrapper = React.memo(
 );
 
 const Paypal = (props) => {
-  const { amount, address, paymentMethod, orderDetails, method } = props;
+  const { amount, address, paymentMethod, orderDetails } = props;
+  const dispatch = useDispatch();
+  const [orderData, setOrderData] = useState(null);
 
+  useEffect(() => {
+    if (orderData) {
+      dispatch(addOrderRedux(orderData));
+    }
+  }, [orderData, dispatch]);
+
+  const handleSuccess = (data) => {
+    setOrderData(data);
+  };
   return (
     <PayPalScriptProvider
       options={{
@@ -66,12 +89,12 @@ const Paypal = (props) => {
       }}
     >
       <ButtonWrapper
-        method={method}
         currency={"USD"}
         amount={amount}
         address={address}
         paymentMethod={paymentMethod}
         orderDetails={orderDetails}
+        onSuccess={handleSuccess}
       />
     </PayPalScriptProvider>
   );
