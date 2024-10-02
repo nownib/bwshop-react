@@ -109,6 +109,7 @@ h6,
     color: #000;
     font-family: "Lato", sans-serif;
     font-size: 16px;
+    margin-bottom: 3px;
   }
 }
 .account {
@@ -146,6 +147,7 @@ h6,
   color: #fff;
   letter-spacing: 0.5px;
   transition: all 0.3s ease 0s;
+  user-select: none;
   &:hover {
     background-color: #fdc040;
     color: #fff;
@@ -167,25 +169,34 @@ h6,
     font-size: 32px;
   }
 }
-
-table {
-  tr {
-    th {
-      font-family: "Lato", sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 1.6;
-      color: #212529 !important;
-    }
-    td {
-      font-family: "Lato", sans-serif;
-      font-size: 14px;
-      color: #212529;
-      vertical-align: middle;
-      line-height: 1.4;
+.order {
+  user-select: none;
+  .table-responsive {
+    table {
+      user-select: text;
+      tr {
+        th {
+          font-family: "Lato", sans-serif;
+          font-size: 14px;
+          font-weight: 600;
+          line-height: 1.6;
+          color: #212529 !important;
+        }
+        td {
+          font-family: "Lato", sans-serif;
+          font-size: 14px;
+          vertical-align: middle;
+          line-height: 1.4;
+          max-width: 200px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
     }
   }
 }
+
 .btn-green {
   color: #3bb77e;
   border: none;
@@ -214,8 +225,18 @@ table {
   .pl-50 {
     padding-left: 20px;
   }
+  td {
+    max-width: 100px !important;
+  }
+  .btn-green,
+  .btn-red {
+    padding: 0 5px 0 0;
+  }
+  .btn-edit-delete {
+    max-width: 95px !important;
+  }
 }
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: 1023px) {
   .pl-50 {
     padding-left: 20px;
   }
@@ -244,5 +265,10 @@ table {
 @media (max-width: 576px) {
   .modal-dialog {
     margin-top: 20%;
+  }
+  th,
+  td {
+    max-width: 60px !important;
+    font-size: 12px !important;
   }
 }

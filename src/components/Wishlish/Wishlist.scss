@@ -1,4 +1,5 @@
 .btn-template {
+  user-select: none;
   text-decoration: none;
   position: relative;
   padding: 12px 30px;
@@ -75,7 +76,7 @@
     }
 
     .item-img {
-      @media (max-width: 768px) {
+      @media (max-width: 767px) {
         padding: 0 0 25px 0 !important;
       }
     }
@@ -104,6 +105,7 @@
   }
 
   .heading-1 {
+    user-select: none;
     margin-bottom: 10px;
     font-size: 48px;
     font-family: "Quicksand-bold", sans-serif;
@@ -185,7 +187,7 @@
           }
           .item-stock {
             color: #7e7e7e;
-            font-size: 24px;
+            font-size: 24px !important;
           }
           .item-btn {
             text-align: center;
@@ -194,8 +196,8 @@
             }
           }
           .item-price {
-            color: #3bb77e;
-            font-size: 32px;
+            color: #3bb77e !important;
+            font-size: 32px !important;
           }
           .item-name {
             padding: 15px 25px 15px 0;

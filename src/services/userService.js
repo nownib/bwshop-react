@@ -36,6 +36,13 @@ const uploadAndGetImage = (formData) => {
   return axios.post("/api/account/upload-image", formData);
 };
 
+const sendCode = (email) => {
+  return axios.post("/api/send-email", { email });
+};
+const resetPassword = (data) => {
+  return axios.post("/api/reset-password", { data });
+};
+
 export {
   registerUser,
   loginUser,
@@ -44,4 +51,6 @@ export {
   loginWithGoogle,
   updateAccount,
   uploadAndGetImage,
+  sendCode,
+  resetPassword,
 };

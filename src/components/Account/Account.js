@@ -10,25 +10,48 @@ import { useNavigate, Link } from "react-router-dom";
 import { logoutRedux } from "../../redux/action/actions";
 import Order from "./Order";
 import TableAddress from "./TableAddress";
+import { useEffect } from "react";
 
 const Account = () => {
-  const user = useSelector((state) => state.user.account);
-  const [userData, setUserData] = useState(user);
+  const user = useSelector((state) => state.user);
+  useEffect(() => {
+    if (!user || user.isAuthenticated === false) {
+      navigate("/login");
+    }
+  }, [user]);
+
+  const userAccount = useSelector((state) => state.user.account);
+  const [userData, setUserData] = useState(userAccount);
   const dispatch = useDispatch();
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessages, setErrorMessages] = useState({
+    username: "",
+    phone: "",
+  });
   const [avatar, setAvatar] = useState(noAvatar);
   const [isUploading, setIsUploading] = useState(false);
   const active = useSelector((state) => state.account.active);
+  const phoneRegex = /^\d{10}$/;
 
   const handleOnChangInput = (value, name) => {
-    if (name === "email" && value.length > 20) {
-      setErrorMessage("Username must not exceed 20 characters.");
-    } else {
-      setErrorMessage("");
+    let _errorMessage = _.cloneDeep(errorMessages);
+    if (name === "username") {
+      if (value.length <= 25 || value.length >= 2) {
+        _errorMessage.username = "";
+      }
+      if (value.length > 25 || value.length < 2) {
+        _errorMessage.username =
+          "Username must be at least 2 characters long and less than 25 characters long";
+      }
     }
-    let _userData = _.cloneDeep(userData);
+    if (name === "phone") {
+      if (phoneRegex.test(value)) {
+        _errorMessage.phone = "";
+      }
+    }
+    const _userData = _.cloneDeep(userData);
     _userData[name] = value;
     setUserData(_userData);
+    setErrorMessages(_errorMessage);
   };
 
   const handleFileChange = async (event) => {
@@ -53,14 +76,21 @@ const Account = () => {
 
   const checkValidateInput = () => {
     let check = true;
-    let arr = ["username", "phone"];
-    for (let i = 0; i < arr.length; i++) {
-      if (!userData[arr[i]]) {
-        toast.error(`Empty input ${arr[i]}`);
-        check = false;
-        break;
-      }
+    let _errorMessage = _.cloneDeep(errorMessages);
+    if (
+      !userData.username ||
+      userData.username.length > 25 ||
+      userData.username.length < 2
+    ) {
+      _errorMessage.username =
+        "Username must be at least 2 characters long and less than 25 characters long";
+      check = false;
     }
+    if (!userData.phone || !phoneRegex.test(userData.phone)) {
+      _errorMessage.phone = "Phone number must be 10 digits";
+      check = false;
+    }
+    setErrorMessages(_errorMessage);
     return check;
   };
 
@@ -68,12 +98,11 @@ const Account = () => {
     let check = checkValidateInput();
     if (check === true) {
       dispatch(updateAccountRedux(userData));
-      await logoutUser();
     }
   };
 
   const navigate = useNavigate();
-  // Hàm xử lý khi click vào mục
+
   const handleActive = (index) => {
     dispatch(setActiveRedux(index));
   };
@@ -176,7 +205,7 @@ const Account = () => {
                                 )
                               }
                             />
-                            {errorMessage && (
+                            {errorMessages.username && (
                               <p
                                 style={{
                                   color: "red",
@@ -184,7 +213,7 @@ const Account = () => {
                                   margin: "0",
                                 }}
                               >
-                                {errorMessage}
+                                {errorMessages.username}
                               </p>
                             )}
                           </div>
@@ -198,6 +227,17 @@ const Account = () => {
                                 handleOnChangInput(event.target.value, "phone")
                               }
                             />
+                            {errorMessages.phone && (
+                              <p
+                                style={{
+                                  color: "red",
+                                  fontSize: "14px",
+                                  margin: "0",
+                                }}
+                              >
+                                {errorMessages.phone}
+                              </p>
+                            )}
                           </div>
                           <div class="col-md-12 form-group">
                             <label for="">Avatar</label>

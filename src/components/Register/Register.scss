@@ -1,4 +1,5 @@
 .register-container {
+  user-select: none;
   font-family: "Quicksand", sans-serif;
   padding: 80px 15px;
 
@@ -29,17 +30,27 @@
     .body-register {
       .form-group {
         .form-control {
-          background: #fff;
+          background: #fff !important;
           height: 64px;
           box-shadow: none;
           font-size: 16px;
           width: 100%;
-          margin-bottom: 20px;
+          margin-bottom: 3px;
           border-radius: 8px;
+          border: 1px solid #ececec;
+        }
+        .password-input {
+          font-size: 1.171875rem;
+          letter-spacing: 1px;
+          line-height: 1.5;
+          &::placeholder {
+            font-size: 16px;
+            letter-spacing: normal;
+          }
         }
         .form-control:focus {
           color: #212529;
-          background-color: #fff;
+          background-color: #fff !important;
           border-color: #3bb77e;
           outline: 0;
         }

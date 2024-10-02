@@ -9,7 +9,15 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 
 const ButtonWrapper = React.memo(
-  ({ currency, amount, address, paymentMethod, orderDetails, onSuccess }) => {
+  ({
+    currency,
+    amount,
+    address,
+    paymentMethod,
+    orderDetails,
+    coupon,
+    onSuccess,
+  }) => {
     const [{ options }, dispatch] = usePayPalScriptReducer();
 
     useEffect(() => {
@@ -17,7 +25,7 @@ const ButtonWrapper = React.memo(
         type: "resetOptions",
         value: { ...options, currency: currency },
       });
-    }, [currency, address, orderDetails, amount]);
+    }, [currency, address, amount, coupon]);
     const handleClick = (data, actions) => {
       if (!address) {
         toast.error("Please choose shipping address!");
@@ -56,6 +64,7 @@ const ButtonWrapper = React.memo(
                 paymentMethod: paymentMethod,
                 paymentStatus: "PAID",
                 products: orderDetails ? orderDetails : [],
+                coupon: coupon,
               };
               onSuccess(data);
             }
@@ -67,7 +76,7 @@ const ButtonWrapper = React.memo(
 );
 
 const Paypal = (props) => {
-  const { amount, address, paymentMethod, orderDetails } = props;
+  const { amount, address, paymentMethod, orderDetails, coupon } = props;
   const dispatch = useDispatch();
   const [orderData, setOrderData] = useState(null);
 
@@ -94,6 +103,7 @@ const Paypal = (props) => {
         address={address}
         paymentMethod={paymentMethod}
         orderDetails={orderDetails}
+        coupon={coupon}
         onSuccess={handleSuccess}
       />
     </PayPalScriptProvider>

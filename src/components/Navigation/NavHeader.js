@@ -48,12 +48,6 @@ const NavHeader = (props) => {
       toast.error(data.EM);
     }
   };
-  // const handleToggle = () => {
-  //   setShowMenu(!showMenu);
-  // };
-  // const handleOnClick = () => {
-  //   setShowMenu(false);
-  // };
 
   const handleClickAccount = () => {
     dispatch(setActiveRedux(0));

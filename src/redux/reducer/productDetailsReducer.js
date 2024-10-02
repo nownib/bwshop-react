@@ -6,7 +6,7 @@ import {
 
 const INITIAL_STATE = {
   isLoading: false,
-  productId: null,
+  product: {},
 };
 
 const productDetailsReducer = (state = INITIAL_STATE, action) => {
@@ -21,7 +21,19 @@ const productDetailsReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isLoading: false,
-        productId: action.productId,
+        product: {
+          id: action.product.id,
+          name: action.product.name,
+          sku: action.product.sku,
+          description: action.product.description,
+          price: action.product.price,
+          imageUrl: action.product.imageUrl,
+          category: action.product.Category.name,
+          rating: action.product.rating,
+          status: action.product.status,
+          stock: action.product.stock,
+          createdAt: action.product.createdAt,
+        },
       };
 
     case FETCH_PRODUCT_DETAIL_ERROR:

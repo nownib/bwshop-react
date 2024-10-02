@@ -32,11 +32,11 @@ const Footer = () => {
             <div className="col-lg-12">
               <div className="position-relative newsletter-inner">
                 <div className="newsletter-content">
-                  <h2 className="mb-20 text-title">
+                  <h2 className="mb-20 text-title-footer">
                     Stay home &amp; get your daily <br />
                     needs from our shop
                   </h2>
-                  <p className="mb-45 text-p">
+                  <p className="mb-45 text-p-footer">
                     Start You'r Daily Shopping with{" "}
                     <span className="text-brand">Nest Mart</span>
                   </p>

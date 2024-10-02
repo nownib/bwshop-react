@@ -42,9 +42,9 @@ const Shop = () => {
     return state.product.isError;
   });
   const dispatch = useDispatch();
-  const handleClickProductDetails = (product) => {
-    let productId = product.id;
-    dispatch(fetchProductDetailsRedux(productId));
+
+  const handleClickProductDetails = (id) => {
+    dispatch(fetchProductDetailsRedux(id));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -289,7 +289,7 @@ const Shop = () => {
                                         <Link
                                           to={`/product/${item.id}`}
                                           onClick={() =>
-                                            handleClickProductDetails(item)
+                                            handleClickProductDetails(item.id)
                                           }
                                         >
                                           <img src={item.imageUrl} alt />
@@ -327,7 +327,7 @@ const Shop = () => {
                                           to={`/product/${item.id}`}
                                           className="product-name"
                                           onClick={() =>
-                                            handleClickProductDetails(item)
+                                            handleClickProductDetails(item.id)
                                           }
                                         >
                                           {truncateText(item.name, 29)}
@@ -339,12 +339,25 @@ const Shop = () => {
                                             {stars.map((_, index) => {
                                               return (
                                                 <FontAwesomeIcon
-                                                  icon={faStar}
+                                                  icon={
+                                                    +item?.rating % 1 !== 0
+                                                      ? +item?.rating >
+                                                          index + 1 ||
+                                                        +item?.rating < index
+                                                        ? faStar
+                                                        : faStarHalfAlt
+                                                      : faStar
+                                                  }
                                                   style={{
                                                     height: "14px",
                                                     width: "14px",
                                                     cursor: "pointer",
-                                                    color: "#FFBA5A",
+                                                    color:
+                                                      item?.rating === null
+                                                        ? "#FFBA5A"
+                                                        : +item?.rating > index
+                                                        ? "#FFBA5A"
+                                                        : "#A9A9A9A9",
                                                   }}
                                                 />
                                               );
@@ -364,7 +377,7 @@ const Shop = () => {
                                             className="link-shop-product"
                                             to={`/product/${item.id}`}
                                             onClick={() =>
-                                              handleClickProductDetails(item)
+                                              handleClickProductDetails(item.id)
                                             }
                                           >
                                             <i class="fa-regular fa-eye"></i>

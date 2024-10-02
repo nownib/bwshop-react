@@ -142,7 +142,6 @@ const Address = (props) => {
       toast.error("Please enter your address");
       return false;
     }
-    console.log(provinceId);
     return true;
   };
 
@@ -150,7 +149,7 @@ const Address = (props) => {
     let check = checkValidInput();
     if (check === true) {
       let response =
-        actionModalAddress === "CREATE"
+        actionModalAddress === "CREATE" || actionModalAddress === undefined
           ? await addAddress(
               provinceId,
               districtId,
@@ -172,7 +171,10 @@ const Address = (props) => {
             );
       if (response && response.EC === 0) {
         toast.success(response.EM);
-        if (actionModalAddress === "CREATE") {
+        if (
+          actionModalAddress === "CREATE" ||
+          actionModalAddress === undefined
+        ) {
           setSpecificAddress("");
         }
       }

@@ -35,6 +35,10 @@ const fetchOrderDetails = (orderId) => {
   return axios.post("/api/order/details", { orderId });
 };
 
+const applyCoupon = (code) => {
+  return axios.post("/api/coupon/apply", { code });
+};
+
 export {
   addToCart,
   fetchAllItemsInCart,
@@ -44,4 +48,5 @@ export {
   addOrder,
   fetchOrdersById,
   fetchOrderDetails,
+  applyCoupon,
 };

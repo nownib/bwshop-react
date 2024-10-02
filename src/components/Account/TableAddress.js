@@ -15,7 +15,7 @@ const TableAddress = () => {
   const user = useSelector((state) => state.user);
   const listAddress = useSelector((state) => state.address.listAddress);
   const isLoading = useSelector((state) => state.order.isLoading);
-  const [actionModalAddress, setActionModalAddress] = useState("");
+  const [actionModalAddress, setActionModalAddress] = useState("CREATE");
   const [showModalAddress, setShowModalAddress] = useState(false);
   const [dataModalAddress, setDataModalAddress] = useState({});
 

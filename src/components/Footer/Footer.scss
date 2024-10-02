@@ -52,8 +52,8 @@
   color: #3bb77e !important;
   font-weight: 700;
 }
-@media only screen and (max-width: 1024px) {
-  .text-title {
+@media only screen and (max-width: 1023px) {
+  .text-title-footer {
     font-size: 40px;
   }
   .newsletter-inner {
@@ -61,7 +61,7 @@
   }
 }
 @media only screen and (max-width: 768px) {
-  .text-title {
+  .text-title-footer {
     font-size: 22px;
   }
 }
@@ -71,17 +71,18 @@
   }
 }
 
-.text-title {
+.text-title-footer {
   font-family: "Quicksand-bold", sans-serif;
   color: #253d4e;
   font-weight: 700 !important;
   line-height: 1.2;
+  font-size: 40px;
 }
-.text-p {
+.text-p-footer {
   font-family: "Quicksand", sans-serif;
-  font-size: 1rem;
+  font-size: 18px;
   line-height: 24px;
-  font-weight: 400;
+  font-weight: 600;
   color: #7e7e7e;
   width: 100%;
 }
@@ -251,7 +252,7 @@
       max-width: 40%;
     }
     .newsletter-content {
-      @extend .text-title;
+      @extend .text-title-footer;
     }
   }
 }

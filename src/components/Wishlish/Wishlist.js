@@ -10,8 +10,11 @@ import { useNavigate } from "react-router-dom";
 import { Audio } from "react-loader-spinner";
 import { Link } from "react-router-dom";
 import "./Wishlist.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
 
 const Wishlist = () => {
+  const stars = Array(5).fill(0);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => {
@@ -120,7 +123,7 @@ const Wishlist = () => {
                                       alt=""
                                     />
                                   </td>
-                                  <td className="item-name">
+                                  <td className="item-name ps-md-5">
                                     <Link
                                       to={`/product/${item.id}`}
                                       className="item-name-link"
@@ -130,6 +133,37 @@ const Wishlist = () => {
                                     >
                                       {item.name}
                                     </Link>
+                                    <div className="product-rating">
+                                      {stars.map((_, index) => {
+                                        return (
+                                          <FontAwesomeIcon
+                                            icon={
+                                              +item.rating % 1 !== 0
+                                                ? +item.rating > index + 1 ||
+                                                  +item.rating < index
+                                                  ? faStar
+                                                  : faStarHalfAlt
+                                                : faStar
+                                            }
+                                            style={{
+                                              height: "14px",
+                                              width: "14px",
+                                              cursor: "pointer",
+                                              color:
+                                                item.rating === null
+                                                  ? "#FFBA5A"
+                                                  : +item.rating > index
+                                                  ? "#FFBA5A"
+                                                  : "#A9A9A9A9",
+                                            }}
+                                          />
+                                        );
+                                      })}
+                                      <span style={{ color: "#7e7e7e" }}>
+                                        {" "}
+                                        ({(+item.rating).toFixed(1)})
+                                      </span>
+                                    </div>
                                   </td>
                                   <td className="item-price" data-title="Price">
                                     ${item.price}

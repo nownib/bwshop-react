@@ -24,7 +24,7 @@ const About = (props) => {
         <div className="row">
           <div className="col-xl-10 col-lg-12 m-auto">
             <section className="row align-items-center mb-50">
-              <div className="col-lg-6">
+              <div className="col-lg-6 no-select">
                 <img
                   style={{ maxWidth: "100%", borderRadius: "15px" }}
                   src={about1}
@@ -34,7 +34,7 @@ const About = (props) => {
               </div>
               <div className="col-lg-6">
                 <div className="introduce ps-0 ps-md-4">
-                  <h2 className="mb-30">Welcome to BW Shop</h2>
+                  <h2 className="mb-30 no-select">Welcome to BW Shop</h2>
                   <p className="mb-25">
                     At BW Shop, we take snacking to the next level. As a leading
                     provider of premium snacks, we’re dedicated to offering
@@ -182,13 +182,13 @@ const About = (props) => {
                   <h1 className="heading-1 mb-40">
                     Your Partner for e-commerce grocery solution
                   </h1>
-                  <p className="mb-30 text-p">
+                  <p className="mb-30 text-p-about ">
                     Ed ut perspiciatis unde omnis iste natus error sit
                     voluptatem accusantium doloremque laudantium, totam rem
                     aperiam, eaque ipsa quae ab illo inventore veritatis et
                     quasi architecto
                   </p>
-                  <p className="text-p">
+                  <p className="text-p-about ">
                     Pitatis et quasi architecto beatae vitae dicta sunt
                     explicabo. Nemo enim ipsam voluptatem quia voluptas sit
                     aspernatur aut odit aut fugit, sed quia
@@ -197,24 +197,24 @@ const About = (props) => {
               </div>
               <div className="row">
                 <div className="col-lg-4 pr-30 mb-md-5 mb-lg-0 mb-sm-5">
-                  <h3 className="mb-30 text-title">Who we are</h3>
-                  <p className="text-p">
+                  <h3 className="mb-30 text-title-about">Who we are</h3>
+                  <p className="text-p-about ">
                     Volutpat diam ut venenatis tellus in metus. Nec dui nunc
                     mattis enim ut tellus eros donec ac odio orci ultrices in.
                     ellus eros donec ac odio orci ultrices in.
                   </p>
                 </div>{" "}
                 <div className="col-lg-4 pr-30 mb-md-5 mb-lg-0 mb-sm-5">
-                  <h3 className="mb-30 text-title">Our history</h3>
-                  <p className="text-p">
+                  <h3 className="mb-30 text-title-about">Our history</h3>
+                  <p className="text-p-about ">
                     Volutpat diam ut venenatis tellus in metus. Nec dui nunc
                     mattis enim ut tellus eros donec ac odio orci ultrices in.
                     ellus eros donec ac odio orci ultrices in.
                   </p>
                 </div>
                 <div className="col-lg-4 pr-30 mb-md-5 mb-lg-0 mb-sm-5">
-                  <h3 className="mb-30 text-title">Our mission</h3>
-                  <p className="text-p">
+                  <h3 className="mb-30 text-title-about">Our mission</h3>
+                  <p className="text-p-about ">
                     Volutpat diam ut venenatis tellus in metus. Nec dui nunc
                     mattis enim ut tellus eros donec ac odio orci ultrices in.
                     ellus eros donec ac odio orci ultrices in.
@@ -268,12 +268,12 @@ const About = (props) => {
                 <div className="col-lg-4 mb-lg-0 mb-md-5 mb-40">
                   <h6 className=" text-brand">Our Team</h6>
                   <h1 className="mb-30 heading-1">Meet Our Expert Team</h1>
-                  <p className="mb-30">
+                  <p className="mb-30 text-p-about">
                     Proin ullamcorper pretium orci. Donec necscele risque leo.
                     Nam massa dolor imperdiet neccon sequata congue idsem.
                     Maecenas malesuada faucibus finibus.
                   </p>
-                  <p className="mb-30">
+                  <p className="mb-30 text-p-about">
                     Proin ullamcorper pretium orci. Donec necscele risque leo.
                     Nam massa dolor imperdiet neccon sequata congue idsem.
                     Maecenas malesuada faucibus finibus.
@@ -293,8 +293,10 @@ const About = (props) => {
                           className=" mb-lg-0"
                         />
                         <div className="content text-center">
-                          <h4 className=" text-title">H. Merinda</h4>
-                          <span className="text-p">CEO &amp; Co-Founder</span>
+                          <h4 className=" text-title-about">H. Merinda</h4>
+                          <span className="text-p-about ">
+                            CEO &amp; Co-Founder
+                          </span>
                           <div className="social-network mt-20">
                             <a href="#">
                               <img src={icon7} alt="" />
@@ -322,8 +324,8 @@ const About = (props) => {
                           className="mb-lg-0"
                         />
                         <div className="content text-center ">
-                          <h4 className=" text-title">Dilan Specter</h4>
-                          <span className="text-p">Head Engineer</span>
+                          <h4 className="text-title-about">Dilan Specter</h4>
+                          <span className="text-p-about ">Head Engineer</span>
                           <div className="social-network mt-20">
                             <a href="#">
                               <img src={icon7} alt="" />

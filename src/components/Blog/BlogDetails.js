@@ -15,10 +15,6 @@ const BlogDetails = () => {
     return state.blog.isLoading;
   });
 
-  useEffect(() => {
-    console.log(blogDetails);
-  }, []);
-
   return (
     <main class="main">
       <div class="page-content mb-50">

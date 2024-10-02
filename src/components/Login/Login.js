@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import login1 from "../../assets/images/login-1.png";
 import logoGoogle from "../../assets/images/logo-google.png";
 import "./Login.scss";
@@ -7,8 +7,10 @@ import { toast } from "react-toastify";
 import { loginUser } from "../../services/userService";
 import { useSelector, useDispatch } from "react-redux";
 import { loginRedux } from "../../redux/action/actions";
+import { Link } from "react-router-dom";
 
 const Login = (props) => {
+  const refValueLogin = useRef(null);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   let navigate = useNavigate();
@@ -76,10 +78,15 @@ const Login = (props) => {
     }
   };
   useEffect(() => {
-    if (user && user.isAuthenticated) {
+    refValueLogin.current.focus();
+  }, []);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (user && user.isAuthenticated && user.token) {
       navigate("/");
     }
-  }, [user]);
+  }, [user, navigate]);
+
   return (
     <div className="login-container">
       <div className="container">
@@ -105,11 +112,12 @@ const Login = (props) => {
                 <div className="body-login">
                   <input
                     type="text"
+                    ref={refValueLogin}
                     placeholder="Email or Phone number"
                     className={
                       objCheckInput.isValidValueLogin
-                        ? "form-control"
-                        : "form-control is-invalid"
+                        ? "form-control "
+                        : "form-control is-invalid "
                     }
                     onChange={(event) => setValueLogin(event.target.value)}
                     onKeyUp={(event) => handlePressEnter(event)}
@@ -119,13 +127,13 @@ const Login = (props) => {
                     placeholder="Password"
                     className={
                       objCheckInput.isValidPassword
-                        ? "form-control"
-                        : "form-control is-invalid"
+                        ? "form-control password-input"
+                        : "form-control is-invalid password-input"
                     }
                     onChange={(event) => setPassword(event.target.value)}
                     onKeyUp={(event) => handlePressEnter(event)}
                   />
-                  <div className="login-footer row mb-5">
+                  <div className="login-footer row mb-4 mb-md-5">
                     <div className="check-remember col-6 me-auto">
                       <label className="custom-checkbox">
                         <input type="checkbox" />
@@ -135,13 +143,16 @@ const Login = (props) => {
                     </div>
                     <div className="col-6 text-end">
                       <span>
-                        <a href="#" className="forgot-password">
+                        <Link
+                          to={`/forgot-password`}
+                          className="forgot-password"
+                        >
                           Forgot password?
-                        </a>
+                        </Link>
                       </span>
                     </div>
                   </div>
-                  <div className="mb-4">
+                  <div className="mb-md-4 mb-2">
                     <button
                       className="btn btn-login"
                       onClick={() => {

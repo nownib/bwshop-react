@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./Product.scss";
 import noAvatar from "../../assets/images/account-no-avatar.png";
@@ -10,33 +10,55 @@ import { toast } from "react-toastify";
 import { Audio } from "react-loader-spinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  upSertReview,
+  fetchReviewsByProduct,
+  fetchRatingsByStar,
+} from "../../services/productService";
+import moment from "moment";
+import { fetchProductDetailsRedux } from "../../redux/action/actions";
 
 const ProductDetails = () => {
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
-  const productId = useSelector((state) => {
-    return state.productDetails.productId;
-  });
+  const [listReviews, setListReviews] = useState([]);
+
   const isAuthenticated = useSelector((state) => {
     return state.user.isAuthenticated;
   });
-
-  const productDetails = useSelector((state) =>
-    state.product.listProducts.find((item) => item.id === productId)
-  );
+  const productDetails = useSelector((state) => state.productDetails.product);
+  const productId = productDetails.id;
   const isLoading = useSelector((state) => {
-    return state.product.isLoading;
+    return state.productDetails.isLoading;
   });
 
+  useEffect(() => {
+    getReviewsByProduct();
+    getRatingsByStar();
+  }, []);
+
+  const getReviewsByProduct = async () => {
+    const path = window.location.pathname;
+    const id = path.split("/").pop();
+    let response = await fetchReviewsByProduct(id);
+    if (response && response.EC === 0) {
+      setListReviews(response.DT);
+    }
+  };
+
   const handleClickAddToCart = (productId) => {
-    if (isAuthenticated === true) {
-      if (quantity <= productDetails.stock) {
-        dispatch(addProductToCartRedux(productId, +quantity));
+    try {
+      if (isAuthenticated === true) {
+        if (quantity <= productDetails?.stock) {
+          dispatch(addProductToCartRedux(productId, +quantity));
+        } else {
+          toast.error("The quantity must not exceed the stock inventory!");
+        }
       } else {
-        toast.error("The quantity must not exceed the stock inventory!");
+        toast.error("You need to login to add products to the cart!");
       }
-    } else {
-      toast.error("You need to login to add products to the cart!");
+    } catch (error) {
+      console.log(error);
     }
   };
   const handleChange = (quantity) => {
@@ -45,17 +67,36 @@ const ProductDetails = () => {
     }
   };
   const handleClickAddToWishlist = (productId) => {
-    if (isAuthenticated === true) {
-      dispatch(addProductToWishlistRedux(productId));
-    } else {
-      toast.error("You need to login to add products to the wishlist!");
+    try {
+      if (isAuthenticated === true) {
+        dispatch(addProductToWishlistRedux(productId));
+      } else {
+        toast.error("You need to login to add products to the wishlist!");
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const stars = Array(5).fill(0);
-  const barRating = Array(5).fill(0);
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(undefined);
+  const [review, setReview] = useState("");
+  const [listBarRatings, setListBarRatings] = useState([]);
+
+  const getRatingsByStar = async () => {
+    try {
+      const path = window.location.pathname;
+      const id = path.split("/").pop();
+      let response = await fetchRatingsByStar(id);
+      if (response && response.EC === 0) {
+        setListBarRatings(response.DT);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleClickRating = (value) => {
     setRating(value);
   };
@@ -64,6 +105,35 @@ const ProductDetails = () => {
   };
   const handleMouseLeave = () => {
     setHoverRating(undefined);
+  };
+
+  const handleUpSertReview = async () => {
+    try {
+      if (rating) {
+        let data = {
+          productId: productId,
+          review: review,
+          rating: rating,
+        };
+        if (isAuthenticated === true) {
+          let response = await upSertReview(data);
+          if (response && response.EC === 0) {
+            toast.success(response.EM);
+            await getReviewsByProduct();
+            await getRatingsByStar();
+            setReview("");
+            setRating(0);
+            dispatch(fetchProductDetailsRedux(productId));
+          }
+        } else {
+          toast.error("You need to log in to add a review!");
+        }
+      } else {
+        toast.error("Rating is required!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <>
@@ -92,25 +162,37 @@ const ProductDetails = () => {
                     <div className="row">
                       <div className="col-md-6 col-sm-12 col-xs-12">
                         <div className="product-img">
-                          <img src={productDetails.imageUrl} alt="" />
+                          <img src={productDetails?.imageUrl} alt="" />
                         </div>
                       </div>
-
                       <div className="col-md-6 col-sm-12 col-xs-12">
                         <div className="details">
-                          <h2 className="title">{productDetails.name}</h2>
+                          <h2 className="title">{productDetails?.name}</h2>
                           <div className="product-rate-cover m-0">
                             <div className="product-rate">
                               <div className="product-rating">
                                 {stars.map((_, index) => {
                                   return (
                                     <FontAwesomeIcon
-                                      icon={faStar}
+                                      icon={
+                                        +productDetails?.rating % 1 !== 0
+                                          ? +productDetails?.rating >
+                                              index + 1 ||
+                                            +productDetails?.rating < index
+                                            ? faStar
+                                            : faStarHalfAlt
+                                          : faStar
+                                      }
                                       style={{
-                                        height: "16px",
-                                        width: "16px",
+                                        height: "14px",
+                                        width: "14px",
                                         cursor: "pointer",
-                                        color: "#FFBA5A",
+                                        color:
+                                          productDetails?.rating === null
+                                            ? "#FFBA5A"
+                                            : +productDetails?.rating > index
+                                            ? "#FFBA5A"
+                                            : "#A9A9A9A9",
                                       }}
                                     />
                                   );
@@ -119,10 +201,10 @@ const ProductDetails = () => {
                             </div>
                           </div>
                           <div className="product-price">
-                            ${productDetails.price}
+                            ${productDetails?.price}
                           </div>
                           <div className="product-description">
-                            <p>{productDetails.description}</p>
+                            <p>{productDetails?.description}</p>
                           </div>
                           <div className="quantity">
                             <input
@@ -148,7 +230,7 @@ const ProductDetails = () => {
                               type="button"
                               className="btn-add-to-cart"
                               onClick={() =>
-                                handleClickAddToCart(productDetails.id)
+                                handleClickAddToCart(productDetails?.id)
                               }
                             >
                               <i
@@ -162,7 +244,7 @@ const ProductDetails = () => {
                               type="button"
                               className="btn-add-to-wishlist"
                               onClick={() =>
-                                handleClickAddToWishlist(productDetails.id)
+                                handleClickAddToWishlist(productDetails?.id)
                               }
                             >
                               <i class="fa-regular fa-heart"></i>
@@ -172,17 +254,25 @@ const ProductDetails = () => {
                             <div className="left-footer">
                               <p>
                                 Category:{" "}
-                                <span>{productDetails.Category.name}</span>
+                                <span>{productDetails?.category}</span>
                               </p>
                               <p>
-                                LIFE: <span>2023-10-30T06:30:16.012Z</span>
+                                LIFE:{" "}
+                                <span>
+                                  {moment(
+                                    productDetails?.createdAt ||
+                                      "2024-07-15T13:52:10.000Z"
+                                  )
+                                    .add(1, "years")
+                                    .format("ll")}
+                                </span>
                               </p>
                             </div>
                             <div className="right-footer">
                               <p>
                                 Stock:{" "}
                                 <span>
-                                  {productDetails.stock} Items in stock
+                                  {productDetails?.stock} Items in stock
                                 </span>
                               </p>
                             </div>
@@ -193,112 +283,95 @@ const ProductDetails = () => {
                     <div className="review-container">
                       <div className="tab-style3">
                         <div className="nav-tab">
-                          <div className="total-reviews">Review (2)</div>
+                          <div className="total-reviews">
+                            Review ({listReviews?.length})
+                          </div>
                           <div className="customer-review">
                             <div className="comment-area">
                               <div className="row">
-                                <div className="col-lg-8 col-md-8">
+                                <div className="col-lg-8">
                                   <h4 className="mb-30">
                                     Customer questions & answers
                                   </h4>
                                   <div className="comment-list">
-                                    <div className="single-comment ">
-                                      <div className="row user">
-                                        <div className="col-3 thumb ">
-                                          <img
-                                            src={noAvatar}
-                                            alt="Avatar"
-                                            style={{
-                                              minWidth: "50px",
-                                              height: "50px",
-                                              borderRadius: "50%",
-                                            }}
-                                          />
-                                          <div class="no-wrap text-3 mt-1">
-                                            Binn ok
-                                          </div>
-                                        </div>
-                                        <div className="col-8 comment">
-                                          <div className="left-comment">
-                                            <div>May 30, 2024 at 3:12 am</div>
-                                            <div className="d-flex justify-content-between my-1">
-                                              <div>Đồ ăn rất ngon</div>
-                                              <div className="right-rate">
-                                                <div className="product-rate-cover">
-                                                  <div className="product-rate p-0">
-                                                    <div className="product-rating">
-                                                      {stars.map((_, index) => {
-                                                        return (
-                                                          <FontAwesomeIcon
-                                                            icon={faStar}
-                                                            style={{
-                                                              height: "12px",
-                                                              width: "12px",
-                                                              cursor: "pointer",
-                                                              color: "#FFBA5A",
-                                                            }}
-                                                          />
-                                                        );
-                                                      })}
+                                    {listReviews &&
+                                      listReviews.length > 0 &&
+                                      listReviews.map((item) => {
+                                        return (
+                                          <div className="single-comment ">
+                                            <div className="row user">
+                                              <div className="col-md-3 thumb m-md-0">
+                                                <img
+                                                  src={
+                                                    item.User.avatar || noAvatar
+                                                  }
+                                                  alt="Avatar"
+                                                  style={{
+                                                    width: "50px",
+                                                    height: "50px",
+                                                    borderRadius: "50%",
+                                                    marginLeft: "5px",
+                                                  }}
+                                                />
+                                                <div class=" text-3 my-md-2 my-1">
+                                                  {item.User.username}
+                                                </div>
+                                              </div>
+                                              <div className="col-md-9 comment">
+                                                <div className="left-comment">
+                                                  <div className="font-size-13">
+                                                    {moment(item.createdAt)
+                                                      .format(`MMMM DD, YYYY [at]
+                                                    h:mm a`)}
+                                                  </div>
+                                                  <div className="review-rating my-md-1">
+                                                    <div className="font-size-14 me-md-3">
+                                                      {item.review}
+                                                    </div>
+                                                    <div className="right-rate">
+                                                      <div className="product-rate-cover">
+                                                        <div className="product-rate p-0">
+                                                          <div className="product-rating">
+                                                            {stars.map(
+                                                              (_, index) => {
+                                                                return (
+                                                                  <FontAwesomeIcon
+                                                                    icon={
+                                                                      faStar
+                                                                    }
+                                                                    style={{
+                                                                      height:
+                                                                        "12px",
+                                                                      width:
+                                                                        "12px",
+                                                                      cursor:
+                                                                        "pointer",
+                                                                      color:
+                                                                        "#FFBA5A",
+                                                                      color:
+                                                                        item.rating >
+                                                                        index
+                                                                          ? "#FFBA5A"
+                                                                          : "#A9A9A9A9",
+                                                                    }}
+                                                                  />
+                                                                );
+                                                              }
+                                                            )}
+                                                          </div>
+                                                        </div>
+                                                      </div>
                                                     </div>
                                                   </div>
                                                 </div>
                                               </div>
                                             </div>
                                           </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div className="single-comment ">
-                                      <div className="row user">
-                                        <div className="col-3 thumb ">
-                                          <img
-                                            src={noAvatar}
-                                            alt="Avatar"
-                                            style={{
-                                              minWidth: "50px",
-                                              height: "50px",
-                                              borderRadius: "50%",
-                                            }}
-                                          />
-                                          <div class="no-wrap text-3 mt-1">
-                                            Binn ok
-                                          </div>
-                                        </div>
-                                        <div className="col-8 comment">
-                                          <div className="left-comment">
-                                            <div>May 30, 2024 at 3:12 am</div>
-                                            <div className="d-flex justify-content-between my-1">
-                                              <div>Đồ ăn rất ngon</div>
-                                              <div className="right-rate">
-                                                <div className="product-rate-cover">
-                                                  <div className="product-rate p-0">
-                                                    <div className="product-rating">
-                                                      {stars.map((_, index) => {
-                                                        return (
-                                                          <FontAwesomeIcon
-                                                            icon={faStar}
-                                                            style={{
-                                                              height: "12px",
-                                                              width: "12px",
-                                                              cursor: "pointer",
-                                                              color: "#FFBA5A",
-                                                            }}
-                                                          />
-                                                        );
-                                                      })}
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
+                                        );
+                                      })}
                                   </div>
                                 </div>
-                                <div className="col-lg-4 col-md-4">
+                                <div className="col-lg-4">
                                   <h4 className=" mb-md-4 mb-3 mt-30 mt-md-0">
                                     Customer reviews
                                   </h4>
@@ -307,32 +380,62 @@ const ProductDetails = () => {
                                       {stars.map((_, index) => {
                                         return (
                                           <FontAwesomeIcon
-                                            icon={faStar}
+                                            icon={
+                                              +productDetails?.rating % 1 !== 0
+                                                ? +productDetails?.rating >
+                                                    index + 1 ||
+                                                  +productDetails?.rating <
+                                                    index
+                                                  ? faStar
+                                                  : faStarHalfAlt
+                                                : faStar
+                                            }
                                             style={{
                                               height: "14px",
                                               width: "14px",
                                               cursor: "pointer",
-                                              color: "#FFBA5A",
+                                              color:
+                                                productDetails?.rating === null
+                                                  ? "#FFBA5A"
+                                                  : +productDetails?.rating >
+                                                    index
+                                                  ? "#FFBA5A"
+                                                  : "#A9A9A9A9",
                                             }}
                                           />
                                         );
                                       })}
                                     </div>
-                                    <h6>5 out of 5</h6>
+                                    <h6>
+                                      {productDetails?.rating === null
+                                        ? 5
+                                        : (+productDetails?.rating).toFixed(
+                                            1
+                                          )}{" "}
+                                      out of 5
+                                    </h6>
                                   </div>
-                                  {barRating.map((_, index) => {
-                                    return (
-                                      <div class="progress mt-3" key={index}>
-                                        <span>{5 - index} star (117)</span>
-                                        <div
-                                          class="progress-bar"
-                                          style={{ width: "66.77%" }}
-                                        >
-                                          66.67%
+                                  {listBarRatings &&
+                                    listBarRatings.length > 0 &&
+                                    listBarRatings.map((item, index) => {
+                                      return (
+                                        <div class="progress mt-3" key={index}>
+                                          <span>
+                                            {5 - index} star ({item.count})
+                                          </span>
+                                          <div className="progressbar-container">
+                                            <div
+                                              class="progress-bar"
+                                              style={{
+                                                width: `${item.average}%`,
+                                              }}
+                                            >
+                                              {item.average}%
+                                            </div>
+                                          </div>
                                         </div>
-                                      </div>
-                                    );
-                                  })}
+                                      );
+                                    })}
                                 </div>
                               </div>
                             </div>
@@ -354,7 +457,7 @@ const ProductDetails = () => {
                                               color:
                                                 (hoverRating || rating) > index
                                                   ? "#FFBA5A"
-                                                  : "#A9A9A9",
+                                                  : "rgb(228, 229, 233)",
                                             }}
                                             onClick={() =>
                                               handleClickRating(index + 1)
@@ -378,12 +481,19 @@ const ProductDetails = () => {
                                         id="comment"
                                         cols={30}
                                         rows={9}
+                                        value={review}
+                                        onChange={(event) =>
+                                          setReview(event.target.value)
+                                        }
                                       ></textarea>
                                     </div>
                                   </div>
                                 </div>
                                 <div className="btn-submit">
-                                  <button className="btn-submit-review">
+                                  <button
+                                    className="btn-submit-review"
+                                    onClick={() => handleUpSertReview()}
+                                  >
                                     Submit reviews
                                   </button>
                                 </div>

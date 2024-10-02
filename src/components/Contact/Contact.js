@@ -29,7 +29,7 @@ const Contact = () => {
               <section className="row align-items-end mb-50">
                 <div className="col-lg-4 mb-lg-0 mb-md-5 mb-3">
                   <h4 className="mb-20 text-brand">How can help you ?</h4>
-                  <h1 class="mb-30 text-title">
+                  <h1 class="mb-30 text-title-contact">
                     Let us know how we can help you
                   </h1>
                   <p class="mb-20 text-2">
@@ -91,7 +91,7 @@ const Contact = () => {
                   <div className="col-xl-8">
                     <div className="contact-from-area">
                       <h5 class="text-brand mb-10">Contact form</h5>
-                      <h2 class="mb-10 text-title">Drop Us a Line</h2>
+                      <h2 class="mb-10 text-title-contact">Drop Us a Line</h2>
                       <p class="text-p mb-30">
                         Your email address will not be published. Required
                         fields are marked *

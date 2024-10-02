@@ -210,12 +210,24 @@ const Home = (props) => {
                                     {stars.map((_, index) => {
                                       return (
                                         <FontAwesomeIcon
-                                          icon={faStar}
+                                          icon={
+                                            +item?.rating % 1 !== 0
+                                              ? +item?.rating > index + 1 ||
+                                                +item?.rating < index
+                                                ? faStar
+                                                : faStarHalfAlt
+                                              : faStar
+                                          }
                                           style={{
                                             height: "14px",
                                             width: "14px",
                                             cursor: "pointer",
-                                            color: "#FFBA5A",
+                                            color:
+                                              item?.rating === null
+                                                ? "#FFBA5A"
+                                                : +item?.rating > index
+                                                ? "#FFBA5A"
+                                                : "#A9A9A9A9",
                                           }}
                                         />
                                       );

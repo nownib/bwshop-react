@@ -15,6 +15,7 @@ import Blog from "../components/Blog/Blog";
 import BlogDetails from "../components/Blog/BlogDetails";
 import Contact from "../components/Contact/Contact";
 import Account from "../components/Account/Account";
+import ForgotPassword from "../components/Login/ForgotPassword";
 
 const AppRoutes = () => {
   return (
@@ -26,6 +27,7 @@ const AppRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/google/redirect" element={<GoogleRedirect />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         {/* </Route> */}
         <Route path="/about" element={<About />} />
         <Route path="/shop" element={<Shop />} />

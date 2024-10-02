@@ -1,8 +1,9 @@
 .login-container {
   font-family: "Quicksand", sans-serif;
   padding: 90px 15px;
-
+  user-select: none;
   .content-left {
+    user-select: none;
     img {
       border-radius: 15px;
       max-width: 100%;
@@ -33,6 +34,7 @@
     }
     .body-login {
       .form-control {
+        padding: 0 1rem !important;
         background: #fff;
         height: 64px;
         box-shadow: none;
@@ -41,6 +43,16 @@
         margin-bottom: 20px;
         border-radius: 8px;
       }
+      .password-input {
+        font-size: 24px;
+        letter-spacing: 0.11rem;
+        line-height: 1.5;
+        &::placeholder {
+          font-size: 16px;
+          letter-spacing: normal;
+        }
+      }
+
       .form-control:focus {
         color: #212529;
         background-color: #fff;
@@ -143,6 +155,9 @@
         .forgot-password {
           text-decoration: none;
           color: #b6b6b6;
+          &:hover {
+            color: #29a56c;
+          }
         }
 
         .text-end {

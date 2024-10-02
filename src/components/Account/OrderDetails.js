@@ -23,7 +23,11 @@ const OrderDetails = (props) => {
   };
   return (
     <>
-      <Modal show={props.show} onHide={props.onHide} className="p-0">
+      <Modal
+        show={props.show}
+        onHide={props.onHide}
+        className="p-0 order-details-container"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Order Details</Modal.Title>
         </Modal.Header>
@@ -75,7 +79,11 @@ const OrderDetails = (props) => {
                           <h5>
                             Total:{" "}
                             <span className="item-total">
-                              ${item.product.price * item.quantity}
+                              $
+                              {(
+                                (item.product.price * item.quantity * 100) /
+                                100
+                              ).toFixed(2)}
                             </span>
                           </h5>
                         </div>
@@ -90,10 +98,16 @@ const OrderDetails = (props) => {
           )}
           <div className="mt-5">
             <h5 className="mb-2">
-              Total payment:{" "}
-              <span className="item-total">${listOrderItems.totalPrice}</span>
+              Coupon:{" "}
+              <span className="item-total">
+                {listOrderItems?.coupon ? listOrderItems?.coupon : ""}
+              </span>
             </h5>
-            <p className="mb-2">Delivery address: {listOrderItems.address}</p>
+            <h5 className="mb-2">
+              Total payment:{" "}
+              <span className="item-total">${listOrderItems?.totalPrice}</span>
+            </h5>
+            <p className="mb-2">Delivery address: {listOrderItems?.address}</p>
           </div>
         </Modal.Body>
       </Modal>

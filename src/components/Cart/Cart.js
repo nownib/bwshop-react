@@ -8,21 +8,28 @@ import {
   clearCartRedux,
   addOrderRedux,
   fetchAllAddressRedux,
+  setActiveRedux,
 } from "../../redux/action/actions";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Audio } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Paypal from "./Paypal";
 import Address from "./Address";
+import { applyCoupon } from "../../services/cartService";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
 
 const Cart = () => {
+  const stars = Array(5).fill(0);
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [addressShipping, setAddressShipping] = useState("");
   const [checkedAddress, setCheckedAddress] = useState(null);
+  const [coupon, setCoupon] = useState(undefined);
+  const [codeCoupon, setCodeCoupon] = useState(undefined);
   const listAddress = useSelector((state) => {
     return state.address.listAddress;
   });
@@ -37,15 +44,26 @@ const Cart = () => {
       return acc;
     }, {})
   );
-  const totalAmount = listProductsInCart
-    .reduce((total, item) => {
+  const [editingQuantities, setEditingQuantities] = useState(
+    listProductsInCart.reduce((acc, item) => {
+      acc[item.id] = item.quantity;
+      return acc;
+    }, {})
+  );
+
+  const totalAmount = useMemo(() => {
+    return listProductsInCart.reduce((total, item) => {
       const quantity =
         tempQuantities[item.id] !== undefined
           ? tempQuantities[item.id]
-          : item.Carts.Cart_Items.quantity;
-      return total + item.price * quantity;
-    }, 0)
-    .toFixed(2);
+          : item.Carts?.Cart_Items?.quantity;
+      return total + (item.price * 100 * quantity) / 100;
+    }, 0);
+  }, [listProductsInCart, tempQuantities]);
+
+  const totalOrder = coupon
+    ? totalAmount - (totalAmount * coupon.value) / 100
+    : totalAmount;
 
   const cartSelected = listProductsInCart.map((item) => ({
     id: item.id,
@@ -66,7 +84,29 @@ const Cart = () => {
     } else {
       navigate("/login");
     }
-  }, [user, tempQuantities]);
+  }, [user, tempQuantities, dispatch, navigate]);
+
+  const handlePressEnter = async (event) => {
+    if (event.key === "Enter") {
+      await handleApplyCoupon();
+    }
+  };
+
+  const handleApplyCoupon = async () => {
+    try {
+      let response = await applyCoupon(codeCoupon);
+      if (response && response.EC === 0) {
+        setCoupon(response.DT);
+        toast.success("Apply coupon successfully!");
+      } else if (response && response.EC === 2) {
+        toast.error(response.EM);
+      } else if (response && response.EC === 3) {
+        toast.error(response.EM);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleClickProductDetails = (product) => {
     let productId = product.id;
@@ -80,22 +120,43 @@ const Cart = () => {
   };
 
   const handleQuantityChange = (quantity, item) => {
+    setEditingQuantities((state) => ({
+      ...state,
+      [item.id]: quantity,
+    }));
+  };
+  const handleQuantityBlur = (item) => {
+    const quantity = editingQuantities[item.id];
+    if (quantity === "") {
+      toast.error(`Please enter a valid quantity!`);
+      setEditingQuantities((state) => ({
+        ...state,
+        [item.id]: tempQuantities[item.id],
+      }));
+      return;
+    }
+
     if (quantity >= 1 && quantity <= item.stock) {
       setTempQuantities((state) => ({
         ...state,
         [item.id]: quantity,
       }));
+
       dispatch(updateProductInCartsRedux(item.id, quantity));
     } else {
-      toast.error(`The quantity must be less than ${item.stock}.`);
+      toast.error(
+        `Quantity must be greater than 0 and less than or equal to stock ${item.stock}!`
+      );
+      setEditingQuantities((state) => ({
+        ...state,
+        [item.id]: tempQuantities[item.id],
+      }));
     }
   };
+
   const hanldeDeleteAllCart = () => {
     dispatch(clearCartRedux());
     toast.success("Clear cart successfully!");
-  };
-  const handleApply = () => {
-    toast.error("Coupon is valid!");
   };
 
   const handleClickCheckOut = () => {
@@ -103,13 +164,16 @@ const Cart = () => {
       toast.error("Please choose shipping address!");
     } else if (listProductsInCart && listProductsInCart.length > 0) {
       let data = {
-        totalPrice: totalAmount,
+        totalPrice: totalOrder,
         address: addressShipping,
         paymentMethod: "Cash on delivery",
         paymentStatus: "NOT YET PAID",
         products: cartSelected,
+        coupon: coupon?.code,
       };
       dispatch(addOrderRedux(data));
+      dispatch(setActiveRedux(1));
+      navigate("/account/orders");
     } else {
       toast.error("Cart is empty!");
     }
@@ -125,6 +189,12 @@ const Cart = () => {
         `${item.specificAddress}, ${item.wards}, ${item.district}, ${item.province}`
       );
     }
+  };
+  const truncateText = (text, maxLength) => {
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + "...";
+    }
+    return text;
   };
   return (
     <>
@@ -151,10 +221,10 @@ const Cart = () => {
                 <div className="col-lg-8 mb-40">
                   <h1 className="heading-1">Your Cart</h1>
                   <div className="heading-2">
-                    <h6 className="text-body">
+                    <h6 className="text-body me-2">
                       There are{" "}
                       <span className="text-color">
-                        {listProductsInCart.length}
+                        {listProductsInCart?.length}
                       </span>{" "}
                       products in your cart
                     </h6>
@@ -213,6 +283,37 @@ const Cart = () => {
                                     >
                                       {item.name}
                                     </Link>
+                                    <div className="product-rating">
+                                      {stars.map((_, index) => {
+                                        return (
+                                          <FontAwesomeIcon
+                                            icon={
+                                              +item.rating % 1 !== 0
+                                                ? +item.rating > index + 1 ||
+                                                  +item.rating < index
+                                                  ? faStar
+                                                  : faStarHalfAlt
+                                                : faStar
+                                            }
+                                            style={{
+                                              height: "14px",
+                                              width: "14px",
+                                              cursor: "pointer",
+                                              color:
+                                                item.rating === null
+                                                  ? "#FFBA5A"
+                                                  : +item.rating > index
+                                                  ? "#FFBA5A"
+                                                  : "#A9A9A9A9",
+                                            }}
+                                          />
+                                        );
+                                      })}
+                                      <span style={{ color: "#7e7e7e" }}>
+                                        {" "}
+                                        ({(+item.rating).toFixed(1)})
+                                      </span>
+                                    </div>
                                   </td>
                                   <td
                                     className="item-price"
@@ -229,7 +330,7 @@ const Cart = () => {
                                         type="number"
                                         value={
                                           //tạo mảng lưu all số lượng của sản phẩm trong giỏ hàng
-                                          tempQuantities[item.id] ||
+                                          editingQuantities[item.id] ||
                                           item.Carts.Cart_Items.quantity
                                         }
                                         onChange={(event) =>
@@ -238,6 +339,7 @@ const Cart = () => {
                                             item
                                           )
                                         }
+                                        onBlur={() => handleQuantityBlur(item)}
                                         min="1"
                                         max="19"
                                         style={{
@@ -257,10 +359,12 @@ const Cart = () => {
                                   >
                                     $
                                     {(
-                                      item.price *
-                                      (tempQuantities[item.id] !== undefined
-                                        ? tempQuantities[item.id]
-                                        : item.Carts.Cart_Items.quantity)
+                                      (item.price *
+                                        100 *
+                                        (tempQuantities[item.id] !== undefined
+                                          ? tempQuantities[item.id]
+                                          : item.Carts.Cart_Items.quantity)) /
+                                      100
                                     ).toFixed(2)}
                                   </td>
                                   <td className="item-btn" data-title="Remove">
@@ -307,10 +411,17 @@ const Cart = () => {
                           </span>
                         </p>
                         <div className="form-coupon">
-                          <input placeholder="Enter your code" />
+                          <input
+                            placeholder="Enter your code"
+                            value={codeCoupon}
+                            onChange={(event) =>
+                              setCodeCoupon(event.target.value)
+                            }
+                            onKeyUp={(event) => handlePressEnter(event)}
+                          />
                           <button
                             className="btn-apply"
-                            onClick={() => handleApply()}
+                            onClick={() => handleApplyCoupon()}
                           >
                             <i class="fa-solid fa-ticket"></i> Apply
                           </button>
@@ -331,7 +442,7 @@ const Cart = () => {
                                 $
                                 {listProductsInCart &&
                                 listProductsInCart.length > 0 ? (
-                                  <>{totalAmount}</>
+                                  <>{+totalAmount.toFixed(2)}</>
                                 ) : (
                                   <>0.00</>
                                 )}
@@ -339,7 +450,7 @@ const Cart = () => {
                             </td>
                           </tr>
                           <tr>
-                            <td scope="col" colSpan={2}>
+                            <td colSpan={2}>
                               <div className="divider-line mt-10 mb-10"></div>
                             </td>
                           </tr>
@@ -358,11 +469,23 @@ const Cart = () => {
                             </td>
                             <td>
                               {" "}
-                              <h5 className="text-end">- $0.00</h5>
+                              <h5 className="text-end">
+                                - $
+                                {coupon ? (
+                                  <>
+                                    {(
+                                      (+totalAmount * coupon.value) /
+                                      100
+                                    ).toFixed(2)}
+                                  </>
+                                ) : (
+                                  <>0.00</>
+                                )}
+                              </h5>
                             </td>
                           </tr>
                           <tr>
-                            <td scope="col" colSpan={2}>
+                            <td colSpan={2}>
                               <div className="divider-line mt-10 mb-10"></div>
                             </td>
                           </tr>
@@ -376,7 +499,7 @@ const Cart = () => {
                                 $
                                 {listProductsInCart &&
                                 listProductsInCart.length > 0 ? (
-                                  <>{+totalAmount}</>
+                                  <>{(+totalOrder).toFixed(2)}</>
                                 ) : (
                                   <>0.00</>
                                 )}
@@ -401,8 +524,8 @@ const Cart = () => {
                                 onChange={() => handleCheckboxAddress(item)}
                               />
                               <span className=" text-address">
-                                {item.specificAddress}, {item.wards},{" "}
-                                {item.district}, {item.province}
+                                {truncateText(item.specificAddress, 40)},{" "}
+                                {item.wards}, {item.district}, {item.province}
                               </span>
                             </div>
                           );
@@ -427,8 +550,9 @@ const Cart = () => {
                         <Paypal
                           address={addressShipping}
                           paymentMethod={"Paid via PayPal"}
-                          amount={totalAmount}
+                          amount={totalOrder}
                           orderDetails={cartSelected}
+                          conpon={coupon?.code}
                         />
                       </div>
                     </div>

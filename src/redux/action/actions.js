@@ -54,7 +54,10 @@ import {
   FETCH_ADDRESS_SUCCESS,
   FETCH_ADDRESS_ERROR,
 } from "./types";
-import { fetchAllProducts } from "../../services/productService";
+import {
+  fetchAllProducts,
+  fetchProductDetails,
+} from "../../services/productService";
 import { getUserAccount, updateAccount } from "../../services/userService";
 import { fetchAllBlogs } from "../../services/blogService";
 import {
@@ -74,6 +77,40 @@ import {
 } from "../../services/wishlistService";
 import { fetchAllAddressByUser } from "../../services/addressService";
 import { toast } from "react-toastify";
+
+// export const fetchReviewsByProductRedux = () => {
+//   return async (dispatch, getState) => {
+//     dispatch(fetchReviewsByProductRequest());
+//     try {
+//       const response = await fetchOrdersById();
+//       if (response && response.EC === 0) {
+//         const data = response && response.DT ? response.DT : [];
+//         dispatch(fetchReviewsByProductSuccess(data));
+//       }
+//     } catch (error) {
+//       console.log(error);
+//       dispatch(fetchReviewsByProductEror());
+//     }
+//   };
+// };
+
+// export const fetchReviewsByProductRequest = () => {
+//   return {
+//     type: FETCH_ORDER_BY_ID_REQUEST,
+//   };
+// };
+
+// export const fetchReviewsByProductSuccess = (data) => {
+//   return {
+//     type: FETCH_ORDER_BY_ID_SUCCESS,
+//     listOrders: data,
+//   };
+// };
+// export const fetchReviewsByProductEror = () => {
+//   return {
+//     type: FETCH_ORDER_BY_ID_ERROR,
+//   };
+// };
 
 export const fetchAllAddressRedux = () => {
   return async (dispatch, getState) => {
@@ -152,8 +189,6 @@ export const addProductToCartRedux = (productId, quantity) => {
         dispatch(addProductToCartSuccess());
         dispatch(fetchAllItemsInCartRedux());
         toast.success(response.EM);
-      } else {
-        toast.error(response.EM);
       }
     } catch (error) {
       console.log(error);
@@ -287,7 +322,10 @@ export const updateAccountRedux = (userData) => {
       let response = await updateAccount(userData);
       if (response && response.EC === 0) {
         dispatch(updateAccountSuccess(userData));
+        localStorage.setItem("Bearer", response.DT.token);
         toast.success(response.EM);
+      } else if (response && response.EC === 2) {
+        toast.error(response.EM);
       }
     } catch (error) {
       console.error(error);
@@ -383,7 +421,10 @@ export const fetchProductDetailsRedux = (productId) => {
     dispatch(fetchProductDetailsRequest());
     try {
       const id = productId;
-      dispatch(fetchProductDetailsSuccess(id));
+      let response = await fetchProductDetails(id);
+      if (response && response.EC === 0) {
+        dispatch(fetchProductDetailsSuccess(response.DT));
+      }
     } catch (error) {
       dispatch(fetchProductDetailsError());
     }
@@ -396,10 +437,10 @@ export const fetchProductDetailsRequest = () => {
   };
 };
 
-export const fetchProductDetailsSuccess = (id) => {
+export const fetchProductDetailsSuccess = (data) => {
   return {
     type: FETCH_PRODUCT_DETAIL_SUCCESS,
-    productId: id,
+    product: data,
   };
 };
 
@@ -488,7 +529,6 @@ export const addOrderRedux = (data) => {
     dispatch(addOrderRequest());
     try {
       let response = await addOrder(data);
-      console.log("check paypal", data);
       if (response && response.EC === 0) {
         dispatch(addOrderSuccess());
         dispatch(clearCartRedux());

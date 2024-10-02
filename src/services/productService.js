@@ -12,12 +12,25 @@ const fetchAllProducts = () => {
 };
 
 const fetchProductDetails = (productId) => {
-  return axios.post(`/api/product/read-details`, { productId });
+  return axios.get(`/api/product/read-details/${productId}`);
+};
+const upSertReview = (data) => {
+  return axios.post(`/api/product/review`, { data });
 };
 
+const fetchReviewsByProduct = (productId) => {
+  return axios.get(`/api/product/read-review/${productId}`);
+};
+
+const fetchRatingsByStar = (productId) => {
+  return axios.get(`/api/product/read-rating-by-star/${productId}`);
+};
 export {
   fetchAllProductTrending,
   fetchAllCategories,
   fetchAllProducts,
   fetchProductDetails,
+  upSertReview,
+  fetchReviewsByProduct,
+  fetchRatingsByStar,
 };

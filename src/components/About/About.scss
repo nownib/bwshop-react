@@ -24,7 +24,7 @@
   font-weight: 600;
   font-family: "Quicksand-bold", sans-serif;
 }
-.text-title {
+.text-title-about {
   font-family: "Quicksand-bold", sans-serif;
   color: #253d4e;
   font-weight: 700;
@@ -40,16 +40,16 @@
 .pr-30 {
   padding-right: 30px;
 }
-.text-p {
+.text-p-about {
   font-family: "Quicksand", sans-serif;
   font-size: 1rem;
   line-height: 24px;
-  font-weight: 400;
+  font-weight: 600;
   color: #7e7e7e;
   width: 100%;
 }
 .heading-3 {
-  @extend .text-title;
+  @extend .text-title-about;
   font-size: 72px;
   color: #fff;
 }
@@ -58,7 +58,7 @@
   position: relative;
 }
 .heading-1 {
-  @extend .text-title;
+  @extend .text-title-about;
   font-size: 48px;
 }
 .text-brand {
@@ -131,6 +131,7 @@
     background: url(../../assets/images/about-8.png) no-repeat center;
     padding: 100px 0;
     overflow: hidden;
+    border-radius: 15px;
     &::after {
       content: "";
       position: absolute;
@@ -150,7 +151,7 @@
     background-repeat: no-repeat;
     padding-bottom: 25px;
     font-size: 40px;
-    @extend .text-title;
+    @extend .text-title-about;
   }
   .featured-card {
     padding: 50px 30px;
@@ -165,11 +166,11 @@
       width: 100px;
     }
     h4 {
-      @extend .text-title;
+      @extend .text-title-about;
       margin-bottom: 30px;
     }
     p {
-      @extend .text-p;
+      @extend .text-p-about;
       font-size: 16px;
       margin-bottom: 30px;
     }
@@ -186,14 +187,19 @@
   }
   .introduce {
     p {
-      @extend .text-p;
+      font-family: "Lato", sans-serif;
+      font-size: 1rem;
+      line-height: 24px;
+      font-weight: 500;
+      color: #7e7e7e;
+      width: 100%;
     }
     .mb-25 {
       margin-bottom: 25px;
     }
 
     h2 {
-      @extend .text-title;
+      @extend .text-title-about;
       font-size: 40px;
     }
     .mb-30 {
