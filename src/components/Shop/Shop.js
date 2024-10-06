@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import { Audio } from "react-loader-spinner";
 import React, { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { fetchAllCategories } from "../../services/productService";
 import {
   fetchAllProductsRedux,
@@ -18,10 +18,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
 
 const Shop = () => {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const search = searchParams.get("search") || "";
+
   const [price, setPrice] = useState([0, 20]);
   const [listCategories, setListCategories] = useState([]);
-
-  const [categoryId, setCategoryId] = useState();
+  const [categoryId, setCategoryId] = useState(null);
   const [productsFilter, setProductsFilter] = useState([]);
   const [totalProducts, setTotalProducts] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
@@ -37,7 +40,6 @@ const Shop = () => {
   const isAuthenticated = useSelector((state) => {
     return state.user.isAuthenticated;
   });
-
   const isError = useSelector((state) => {
     return state.product.isError;
   });
@@ -59,6 +61,7 @@ const Shop = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     dispatch(fetchAllProductsRedux());
+    getAllCategories();
   }, []);
 
   useEffect(() => {
@@ -66,14 +69,11 @@ const Shop = () => {
     if (applyFilter) {
       setApplyFilter(false);
     }
-  }, [products, currentPage, categoryId, applyFilter, sortOption]);
-
-  useEffect(() => {
-    getAllCategories();
-  }, []);
+  }, [products, currentPage, categoryId, applyFilter, sortOption, search]);
 
   const paginateAndFilterProducts = () => {
     let filteredProducts = [...products];
+
     if (categoryId) {
       const numericCategoryId = Number(categoryId);
       filteredProducts = filteredProducts.filter(
@@ -93,6 +93,13 @@ const Shop = () => {
       filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
     } else if (sortOption === "nameDesc") {
       filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
+    }
+
+    if (search) {
+      const inputLower = search.toLowerCase();
+      filteredProducts = filteredProducts.filter((item) =>
+        item.name.toLowerCase().includes(inputLower)
+      );
     }
 
     const startOffset = (currentPage - 1) * productsPerPage;
@@ -136,13 +143,17 @@ const Shop = () => {
     setApplyFilter(true);
     setCurrentPage(1);
   };
-
+  const navigate = useNavigate();
   const handleClickClear = () => {
     setPrice([0, 20]);
     setApplyFilter(false);
     setCurrentPage(1);
     setSortOption("");
-    setProductsFilter([...products]);
+    setCategoryId(null);
+    setTotalProducts(products);
+    setProductsFilter(products.slice(0, 10));
+    setTotalPages(Math.ceil(products.length / productsPerPage));
+    navigate("/shop");
   };
   const valuetext = (value) => `${value}`;
   const truncateText = (text, maxLength) => {
@@ -239,7 +250,7 @@ const Shop = () => {
               <div className="sort-product">
                 <select
                   className="form-select"
-                  onChange={() => handleSortChange()}
+                  onChange={(event) => handleSortChange(event)}
                   value={sortOption}
                 >
                   <option value="">Sort by: Created</option>

@@ -8,10 +8,11 @@ import {
 import { useEffect, useState } from "react";
 import "./Address.scss";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchAllAddressRedux } from "../../redux/action/actions";
 
 const Address = (props) => {
+  const user = useSelector((state) => state.user);
   const [specificAddress, setSpecificAddress] = useState("");
 
   const [provinceId, setProvinceId] = useState("");
@@ -27,8 +28,10 @@ const Address = (props) => {
   const dispatch = useDispatch();
   const { actionModalAddress, dataModalAddress } = props;
   useEffect(() => {
-    getAllProvinces();
-  }, []);
+    if (user && user.isAuthenticated && user.token) {
+      getAllProvinces();
+    }
+  }, [user]);
 
   useEffect(() => {
     if (actionModalAddress === "UPDATE") {
@@ -177,6 +180,8 @@ const Address = (props) => {
         ) {
           setSpecificAddress("");
         }
+      } else if (response && response.EC === 1) {
+        toast.error(response.EM);
       }
       dispatch(fetchAllAddressRedux());
     }

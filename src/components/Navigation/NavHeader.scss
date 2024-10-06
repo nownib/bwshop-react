@@ -52,6 +52,8 @@
     height: auto;
     .navbar-nav {
       .search-input {
+        padding: 0.375rem 1rem;
+        color: #253d4e;
         width: 300px;
         &:focus {
           border-color: #3bb77e;

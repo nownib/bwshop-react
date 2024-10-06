@@ -1,9 +1,9 @@
 .home-container {
   @media only screen and (max-width: 768px) {
     .cover-slide {
-      height: 300px !important; /* Điều chỉnh chiều cao xuống 350px khi màn hình nhỏ hơn 768px */
-      justify-content: center; /* Căn giữa các thẻ con theo chiều dọc */
-      align-items: center; /* Căn giữa các thẻ con theo chiều ngang */
+      height: 300px !important;
+      justify-content: center;
+      align-items: center;
       padding: 0 !important;
       .left-slide {
         img {
@@ -349,6 +349,7 @@
           }
         }
         .product-action {
+          user-select: none;
           position: absolute;
           top: 60%;
           left: 50%;

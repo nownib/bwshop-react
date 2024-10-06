@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import "./Product.scss";
 import noAvatar from "../../assets/images/account-no-avatar.png";
 import {
@@ -27,20 +28,26 @@ const ProductDetails = () => {
     return state.user.isAuthenticated;
   });
   const productDetails = useSelector((state) => state.productDetails.product);
-  const productId = productDetails.id;
+  const notFound = useSelector((state) => state.productDetails.notFound);
   const isLoading = useSelector((state) => {
     return state.productDetails.isLoading;
   });
+  const { productId } = useParams();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (notFound) {
+      navigate("/product/20");
+    }
+  }, [notFound, navigate]);
 
   useEffect(() => {
     getReviewsByProduct();
     getRatingsByStar();
-  }, []);
+    dispatch(fetchProductDetailsRedux(productId));
+  }, [dispatch, productId]);
 
   const getReviewsByProduct = async () => {
-    const path = window.location.pathname;
-    const id = path.split("/").pop();
-    let response = await fetchReviewsByProduct(id);
+    let response = await fetchReviewsByProduct(productId);
     if (response && response.EC === 0) {
       setListReviews(response.DT);
     }
@@ -86,9 +93,7 @@ const ProductDetails = () => {
 
   const getRatingsByStar = async () => {
     try {
-      const path = window.location.pathname;
-      const id = path.split("/").pop();
-      let response = await fetchRatingsByStar(id);
+      let response = await fetchRatingsByStar(productId);
       if (response && response.EC === 0) {
         setListBarRatings(response.DT);
       }
@@ -257,22 +262,29 @@ const ProductDetails = () => {
                                 <span>{productDetails?.category}</span>
                               </p>
                               <p>
-                                LIFE:{" "}
+                                Stock:{" "}
                                 <span>
-                                  {moment(
-                                    productDetails?.createdAt ||
-                                      "2024-07-15T13:52:10.000Z"
-                                  )
-                                    .add(1, "years")
-                                    .format("ll")}
+                                  {productDetails?.stock} Items in stock
                                 </span>
                               </p>
                             </div>
                             <div className="right-footer">
                               <p>
-                                Stock:{" "}
+                                MFG:{" "}
                                 <span>
-                                  {productDetails?.stock} Items in stock
+                                  {moment(
+                                    productDetails?.productionDate ||
+                                      "2024-07-15T13:52:10.000Z"
+                                  ).format("ll")}
+                                </span>
+                              </p>
+                              <p>
+                                EXP:{" "}
+                                <span>
+                                  {moment(
+                                    productDetails?.expirationDate ||
+                                      "2025-07-15T13:52:10.000Z"
+                                  ).format("ll")}
                                 </span>
                               </p>
                             </div>
@@ -320,7 +332,7 @@ const ProductDetails = () => {
                                               <div className="col-md-9 comment">
                                                 <div className="left-comment">
                                                   <div className="font-size-13">
-                                                    {moment(item.createdAt)
+                                                    {moment(item.createTime)
                                                       .format(`MMMM DD, YYYY [at]
                                                     h:mm a`)}
                                                   </div>

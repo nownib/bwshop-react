@@ -7,6 +7,7 @@ import {
 const INITIAL_STATE = {
   isLoading: false,
   product: {},
+  notFound: false,
 };
 
 const productDetailsReducer = (state = INITIAL_STATE, action) => {
@@ -15,12 +16,14 @@ const productDetailsReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isLoading: true,
+        notFound: false,
       };
 
     case FETCH_PRODUCT_DETAIL_SUCCESS:
       return {
         ...state,
         isLoading: false,
+
         product: {
           id: action.product.id,
           name: action.product.name,
@@ -32,7 +35,8 @@ const productDetailsReducer = (state = INITIAL_STATE, action) => {
           rating: action.product.rating,
           status: action.product.status,
           stock: action.product.stock,
-          createdAt: action.product.createdAt,
+          productionDate: action.product.productionDate,
+          expirationDate: action.product.expirationDate,
         },
       };
 
@@ -40,6 +44,7 @@ const productDetailsReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isLoading: false,
+        notFound: true,
       };
     default:
       return state;

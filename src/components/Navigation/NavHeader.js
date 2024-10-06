@@ -1,7 +1,7 @@
 import React from "react";
 import "./NavHeader.scss";
 import Nav from "react-bootstrap/Nav";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { useState } from "react";
@@ -13,7 +13,6 @@ import { toast } from "react-toastify";
 import { logoutRedux, setActiveRedux } from "../../redux/action/actions";
 import { useSelector, useDispatch } from "react-redux";
 import { Audio } from "react-loader-spinner";
-// import { fetchUserRedux } from "../../redux/action/actions";
 
 const NavHeader = (props) => {
   const dispatch = useDispatch();
@@ -27,7 +26,21 @@ const NavHeader = (props) => {
     (state) => state.wishlist.listProductsInWishlist
   );
   let navigate = useNavigate();
+  const location = useLocation();
+  const [inputSearch, setInputSearch] = useState("");
+
+  const handleClickSearch = async () => {
+    navigate(`/shop?search=${encodeURIComponent(inputSearch)}`);
+  };
+  const handlePressEnter = async (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      await handleClickSearch();
+    }
+  };
+
   const [show, setShow] = useState(false);
+
   const showDropdown = () => {
     setShow(true);
   };
@@ -116,11 +129,16 @@ const NavHeader = (props) => {
               <Form className="d-flex">
                 <Form.Control
                   type="search"
-                  placeholder="Search"
+                  placeholder="Search Items..."
                   className="me-2 search-input"
                   aria-label="Search"
+                  onChange={(event) => setInputSearch(event.target.value)}
+                  onKeyDown={(event) => handlePressEnter(event)}
                 />
-                <Button variant="outline-success">
+                <Button
+                  variant="outline-success"
+                  onClick={() => handleClickSearch()}
+                >
                   <i className="fa fa-search" aria-hidden="true"></i>
                 </Button>
               </Form>

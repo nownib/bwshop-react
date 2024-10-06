@@ -1,13 +1,12 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import "./Blog.scss";
 import { Audio } from "react-loader-spinner";
 
 const BlogDetails = () => {
-  const dispatch = useDispatch();
   const blogId = useSelector((state) => {
     return state.blogDetails.blogId;
   });
+
   const blogDetails = useSelector((state) =>
     state.blog.listBlogs.find((item) => item.id === blogId)
   );
@@ -44,16 +43,16 @@ const BlogDetails = () => {
                         <>
                           <h6 class="mb-10">
                             <a className="text-1" href="#">
-                              {blogDetails.category}
+                              {blogDetails?.category}
                             </a>
                           </h6>
-                          <h2 class="mb-10 text-2">{blogDetails.title}</h2>
+                          <h2 class="mb-10 text-2">{blogDetails?.title}</h2>
                           <div class="single-header-meta">
                             <div class="entry-meta meta-1 font-md mt-15 mb-15">
                               <span class="post-by">
                                 By{" "}
                                 <a href="#" className="text-1">
-                                  {blogDetails.author}{" "}
+                                  {blogDetails?.author}{" "}
                                 </a>
                               </span>
                               <span class="text-p">- 10 months ago</span>
@@ -70,7 +69,7 @@ const BlogDetails = () => {
                   </div>
                   <figure class="single-thumbnail" href="#">
                     <img
-                      src={blogDetails.imageUrl}
+                      src={blogDetails?.imageUrl}
                       alt=""
                       style={{
                         maxWidth: "100%",
@@ -83,7 +82,7 @@ const BlogDetails = () => {
                       <div className="col-xl-10 col-lg-12 m-auto">
                         <div
                           dangerouslySetInnerHTML={{
-                            __html: blogDetails.description,
+                            __html: blogDetails?.description,
                           }}
                         />
                       </div>

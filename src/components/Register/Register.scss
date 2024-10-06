@@ -39,15 +39,6 @@
           border-radius: 8px;
           border: 1px solid #ececec;
         }
-        .password-input {
-          font-size: 1.171875rem;
-          letter-spacing: 1px;
-          line-height: 1.5;
-          &::placeholder {
-            font-size: 16px;
-            letter-spacing: normal;
-          }
-        }
         .form-control:focus {
           color: #212529;
           background-color: #fff !important;

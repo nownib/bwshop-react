@@ -184,8 +184,9 @@ const Register = (props) => {
                         onChange={(event) =>
                           handleOnChangInput(event.target.value, "username")
                         }
-                        onKeyUp={(event) => handlePressEnter(event)}
+                        onKeyDown={(event) => handlePressEnter(event)}
                       />
+
                       {errorMessages.username && (
                         <p
                           style={{
@@ -211,7 +212,7 @@ const Register = (props) => {
                         onChange={(event) =>
                           handleOnChangInput(event.target.value, "phone")
                         }
-                        onKeyUp={(event) => handlePressEnter(event)}
+                        onKeyDown={(event) => handlePressEnter(event)}
                       />
                       {errorMessages.phone && (
                         <p
@@ -238,7 +239,7 @@ const Register = (props) => {
                         onChange={(event) =>
                           handleOnChangInput(event.target.value, "email")
                         }
-                        onKeyUp={(event) => handlePressEnter(event)}
+                        onKeyDown={(event) => handlePressEnter(event)}
                       />
                       {errorMessages.email && (
                         <p
@@ -265,7 +266,7 @@ const Register = (props) => {
                         onChange={(event) =>
                           handleOnChangInput(event.target.value, "password")
                         }
-                        onKeyUp={(event) => handlePressEnter(event)}
+                        onKeyDown={(event) => handlePressEnter(event)}
                       />
                       {errorMessages.password && (
                         <p
@@ -295,7 +296,7 @@ const Register = (props) => {
                             "confirmPassword"
                           )
                         }
-                        onKeyUp={(event) => handlePressEnter(event)}
+                        onKeyDown={(event) => handlePressEnter(event)}
                       />
                       {errorMessages.confirmPassword && (
                         <p

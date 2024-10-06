@@ -7,6 +7,7 @@ import {
 import { addOrderRedux } from "../../redux/action/actions";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const ButtonWrapper = React.memo(
   ({
@@ -25,7 +26,8 @@ const ButtonWrapper = React.memo(
         type: "resetOptions",
         value: { ...options, currency: currency },
       });
-    }, [currency, address, amount, coupon]);
+    }, [currency, address, amount]);
+
     const handleClick = (data, actions) => {
       if (!address) {
         toast.error("Please choose shipping address!");
@@ -37,6 +39,7 @@ const ButtonWrapper = React.memo(
       }
       return actions.resolve();
     };
+
     return (
       <PayPalButtons
         style={{ layout: "vertical" }}
@@ -44,19 +47,24 @@ const ButtonWrapper = React.memo(
         forceReRender={[currency, amount]}
         fundingSource={undefined}
         onClick={(data, actions) => handleClick(data, actions)}
-        createOrder={(data, actions) =>
-          actions.order
-            .create({
+        createOrder={async (data, actions) => {
+          try {
+            const orderID = await actions.order.create({
               purchase_units: [
                 {
                   amount: { currency_code: currency, value: amount },
                 },
               ],
-            })
-            .then((orderID) => orderID)
-        }
-        onApprove={(data, actions) =>
-          actions.order.capture().then(async (response) => {
+            });
+            return orderID;
+          } catch (error) {
+            console.error("Error creating order:", error);
+            return actions.reject();
+          }
+        }}
+        onApprove={async (data, actions) => {
+          try {
+            const response = await actions.order.capture();
             if (response.status === "COMPLETED") {
               const data = {
                 totalPrice: amount,
@@ -68,8 +76,24 @@ const ButtonWrapper = React.memo(
               };
               onSuccess(data);
             }
-          })
-        }
+          } catch (error) {
+            console.error("Error capturing order:", error);
+          }
+        }}
+        onCancel={() => {
+          try {
+            toast.info("Payment was canceled!");
+          } catch (error) {
+            console.error(error);
+          }
+        }}
+        onError={() => {
+          try {
+            toast.error("Payment failed!");
+          } catch (error) {
+            console.error(error);
+          }
+        }}
       />
     );
   }
@@ -78,17 +102,20 @@ const ButtonWrapper = React.memo(
 const Paypal = (props) => {
   const { amount, address, paymentMethod, orderDetails, coupon } = props;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [orderData, setOrderData] = useState(null);
 
   useEffect(() => {
     if (orderData) {
       dispatch(addOrderRedux(orderData));
+      navigate("/account/orders");
     }
-  }, [orderData, dispatch]);
+  }, [orderData, dispatch, navigate]);
 
   const handleSuccess = (data) => {
     setOrderData(data);
   };
+
   return (
     <PayPalScriptProvider
       options={{

@@ -37,9 +37,9 @@ const Blog = () => {
             <div className="col-lg-12">
               <div class="shop-product-fillter mb-50">
                 <div class="totall-product">
-                  <h1 className="text-title">
+                  <h1 className="text-title-blog">
                     <img
-                      class=" mr-10"
+                      class="ms-1 mr-10"
                       src={category}
                       alt=""
                       style={{

@@ -136,7 +136,7 @@ const Cart = () => {
       return;
     }
 
-    if (quantity >= 1 && quantity <= item.stock) {
+    if (quantity >= 1 && quantity <= 11) {
       setTempQuantities((state) => ({
         ...state,
         [item.id]: quantity,
@@ -412,12 +412,12 @@ const Cart = () => {
                         </p>
                         <div className="form-coupon">
                           <input
-                            placeholder="Enter your code"
+                            placeholder="Enter wonbin30 to get 30% off"
                             value={codeCoupon}
                             onChange={(event) =>
                               setCodeCoupon(event.target.value)
                             }
-                            onKeyUp={(event) => handlePressEnter(event)}
+                            onKeyDown={(event) => handlePressEnter(event)}
                           />
                           <button
                             className="btn-apply"
@@ -442,7 +442,7 @@ const Cart = () => {
                                 $
                                 {listProductsInCart &&
                                 listProductsInCart.length > 0 ? (
-                                  <>{+totalAmount.toFixed(2)}</>
+                                  <>{(+totalAmount).toFixed(2)}</>
                                 ) : (
                                   <>0.00</>
                                 )}
@@ -552,7 +552,7 @@ const Cart = () => {
                           paymentMethod={"Paid via PayPal"}
                           amount={totalOrder}
                           orderDetails={cartSelected}
-                          conpon={coupon?.code}
+                          coupon={coupon?.code}
                         />
                       </div>
                     </div>

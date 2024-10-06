@@ -424,6 +424,8 @@ export const fetchProductDetailsRedux = (productId) => {
       let response = await fetchProductDetails(id);
       if (response && response.EC === 0) {
         dispatch(fetchProductDetailsSuccess(response.DT));
+      } else if (response && response.EC === 404) {
+        dispatch(fetchProductDetailsError());
       }
     } catch (error) {
       dispatch(fetchProductDetailsError());
@@ -531,8 +533,11 @@ export const addOrderRedux = (data) => {
       let response = await addOrder(data);
       if (response && response.EC === 0) {
         dispatch(addOrderSuccess());
+        dispatch(fetchOrdersByIdRedux());
         dispatch(clearCartRedux());
         toast.success(response.EM);
+      } else if (response && response.EC === 1) {
+        toast.error(response.EM);
       }
     } catch (error) {
       console.log(error);

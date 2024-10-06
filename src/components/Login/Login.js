@@ -19,7 +19,6 @@ const Login = (props) => {
   };
 
   const handleLoginWithGoogle = async () => {
-    // Chuyển hướng đến backend route để bắt đầu quá trình xác thực
     window.location.href = `${process.env.REACT_APP_BACKEND_URL}/api/auth/google`;
   };
 
@@ -80,11 +79,12 @@ const Login = (props) => {
   useEffect(() => {
     refValueLogin.current.focus();
   }, []);
+
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    if (user && user.isAuthenticated && user.token) {
+    if (user && user.isAuthenticated === true) {
       navigate("/");
     }
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [user, navigate]);
 
   return (
@@ -120,7 +120,7 @@ const Login = (props) => {
                         : "form-control is-invalid "
                     }
                     onChange={(event) => setValueLogin(event.target.value)}
-                    onKeyUp={(event) => handlePressEnter(event)}
+                    onKeyDown={(event) => handlePressEnter(event)}
                   />
                   <input
                     type="password"
@@ -131,7 +131,7 @@ const Login = (props) => {
                         : "form-control is-invalid password-input"
                     }
                     onChange={(event) => setPassword(event.target.value)}
-                    onKeyUp={(event) => handlePressEnter(event)}
+                    onKeyDown={(event) => handlePressEnter(event)}
                   />
                   <div className="login-footer row mb-4 mb-md-5">
                     <div className="check-remember col-6 me-auto">

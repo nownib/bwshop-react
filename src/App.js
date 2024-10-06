@@ -16,11 +16,9 @@ function App() {
   const isLoading = useSelector((state) => {
     return state.user.isLoading;
   });
-  const user = useSelector((state) => state.user);
   useEffect(() => {
     dispatch(fetchUserRedux());
   }, [dispatch]);
-
   return (
     <>
       {/* 1 */}
@@ -56,7 +54,7 @@ function App() {
       </BrowserRouter>
       <ToastContainer
         position="top-right"
-        autoClose={3000}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

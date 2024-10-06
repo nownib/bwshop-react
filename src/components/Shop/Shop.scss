@@ -106,6 +106,7 @@
         min-height: 70vh;
       }
       .product-footer {
+        user-select: none;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -242,6 +243,7 @@
             }
           }
           .product-action {
+            user-select: none;
             position: absolute;
             top: 60%;
             left: 50%;

@@ -19,6 +19,7 @@ const Order = () => {
   const [showOrderDetails, setShowOrderDetails] = useState(false);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     if (user && user.isAuthenticated === true) {
       dispatch(fetchOrdersByIdRedux());
     } else {
@@ -77,7 +78,7 @@ const Order = () => {
                           <tr key={`row-${index}`}>
                             <td>#{index + 1}</td>
                             <td>
-                              {moment(item.createdAt).format(
+                              {moment(item.createTime).format(
                                 "HH:mm DD/MM/YYYY"
                               )}
                             </td>
