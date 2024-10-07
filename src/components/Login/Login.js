@@ -64,8 +64,7 @@ const Login = (props) => {
         };
         localStorage.setItem("Bearer", token);
         dispatch(loginRedux(data));
-        window.location.reload();
-        navigate("/");
+        window.location.href = "/";
       }
       if (response && response.EC !== 0) {
         toast.error(response.EM);
