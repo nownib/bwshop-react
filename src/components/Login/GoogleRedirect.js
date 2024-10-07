@@ -7,6 +7,7 @@ const GoogleRedirect = () => {
   const handleLoginWithGoogle = async (token) => {
     if (token) {
       localStorage.setItem("Bearer", token);
+      window.location.reload();
       navigate("/");
     }
   };
