@@ -15,7 +15,7 @@ const GoogleRedirect = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
     handleLoginWithGoogle(token);
-  }, [navigate, loginRedux]);
+  }, [navigate]);
 
   return <></>;
 };
