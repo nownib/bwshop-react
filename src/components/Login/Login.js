@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { loginUser } from "../../services/userService";
 import { useSelector, useDispatch } from "react-redux";
-import { loginRedux } from "../../redux/action/actions";
+import { fetchUserRedux, loginRedux } from "../../redux/action/actions";
 import { Link } from "react-router-dom";
 
 const Login = (props) => {
@@ -64,6 +64,7 @@ const Login = (props) => {
         };
         localStorage.setItem("Bearer", token);
         dispatch(loginRedux(data));
+        dispatch(fetchUserRedux());
         navigate("/");
       }
       if (response && response.EC !== 0) {

@@ -374,7 +374,6 @@ export const loginRedux = (data) => {
   return async (dispatch, getState) => {
     try {
       dispatch(loginSuccess(data));
-      dispatch(fetchUserRedux());
     } catch (error) {
       console.log(error);
     }
