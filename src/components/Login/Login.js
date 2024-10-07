@@ -64,7 +64,7 @@ const Login = (props) => {
         };
         localStorage.setItem("Bearer", token);
         dispatch(loginRedux(data));
-        dispatch(fetchUserRedux());
+        window.location.reload();
         navigate("/");
       }
       if (response && response.EC !== 0) {
