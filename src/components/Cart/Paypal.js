@@ -4,7 +4,7 @@ import {
   PayPalButtons,
   usePayPalScriptReducer,
 } from "@paypal/react-paypal-js";
-import { addOrderRedux } from "../../redux/action/actions";
+import { addOrderRedux, setActiveRedux } from "../../redux/action/actions";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -108,6 +108,7 @@ const Paypal = (props) => {
   useEffect(() => {
     if (orderData) {
       dispatch(addOrderRedux(orderData));
+      dispatch(setActiveRedux(1));
       navigate("/account/orders");
     }
   }, [orderData, dispatch, navigate]);
