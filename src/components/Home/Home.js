@@ -158,7 +158,7 @@ const Home = (props) => {
               ) : (
                 <>
                   {productTrending &&
-                    productTrending.length &&
+                    productTrending.length > 0 &&
                     productTrending.map((item, index) => {
                       return (
                         <div
