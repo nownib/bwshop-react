@@ -75,7 +75,7 @@ const Home = (props) => {
             <div className="left-slide col-xl-8 col-lg-12 col-md-12 col-12">
               {slideIndex === 0 ? (
                 <>
-                  <img src={slide1} alt="slide" className="fade-in" />
+                  <img src={slide1} alt="slide" className="fade-on" />
                   <div className="remind-slide fade-in">
                     <div className="remind-1 ">
                       Don't miss
